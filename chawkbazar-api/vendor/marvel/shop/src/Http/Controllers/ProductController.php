@@ -392,16 +392,21 @@ class ProductController extends CoreController
         }
         if (isset($shop_id)) {
             $file = $uploadedCsv->storePubliclyAs('csv-files', 'solitaire-products-' . $shop_id . '.' . $uploadedCsv->getClientOriginalExtension(), 'public');
-            $fileLog = $uploadedCsv->storePubliclyAs('csv-files-log', 'solitaire-products-' . $shop_id .date('Y-m-d').'.'. $uploadedCsv->getClientOriginalExtension(), 'public');
-            // $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()) . '/' . $file);
+            // $fileLog = $uploadedCsv->storePubliclyAs('csv-files-log', 'solitaire-products-' . $shop_id .date('Y-m-d').'.'. $uploadedCsv->getClientOriginalExtension(), 'public');
+            // // $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()) . '/' . $file);
 
-             $filePath = public_path('storage/csv-files/' . basename($file));
+            //  $filePath = public_path('storage/csv-files/' . basename($file));
             // echo '<pre>';
             // print_r($filePath);
             // echo '</pre>';
             // die;
+
+            $fileLog = $uploadedCsv->storePubliclyAs('csv-files-log', 'solitaire-products-' . $shop_id .date(DATE_ATOM).'.'. $uploadedCsv->getClientOriginalExtension(), 'public');
+
+            $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()) . '/' . $file);
+
             // Convert CSV to array
-            $products = $this->repository->csvToArray($filePath);
+            // $products = $this->repository->csvToArray($filePath);
             if(count($products)>2000){
                 throw new MarvelException("CAN'T IMPORT MORE THAN 2000 PRODUCTS AT A TIME");
             }
@@ -555,11 +560,11 @@ class ProductController extends CoreController
         $shop = Shop::findOrFail($request->shop_id);
         $import_csv = $this->importCsvRepository->findOrFail($request->id);
 
-        // $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()).'/'.$import_csv->csv_link);
-        $file = $import_csv->csv_link;
-        $filePath = public_path('storage/csv-files/' . basename($file));
+        $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()).'/'.$import_csv->csv_link);
+        // $file = $import_csv->csv_link;
+        // $filePath = public_path('storage/csv-files/' . basename($file));
 
-        $products = $this->repository->csvToArray($filePath);
+        // $products = $this->repository->csvToArray($filePath);
         $product_chunks = array_chunk($products,250);
         $existing_solitaire_products = $this->repository->all()->where('shop_id',$request->shop_id)->where('type_id',6);
     //     $arrExistsMain = [];
