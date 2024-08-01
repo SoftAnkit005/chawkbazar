@@ -39,7 +39,7 @@ class ProductController extends CoreController
      *
      * @param Request $request
      * @return Collection|Product[]
-     */ 
+     */
 
     public function index(Request $request)
     {
@@ -386,7 +386,7 @@ class ProductController extends CoreController
             if (!isset($product['STONEID_OR_STYLECODE']) || !isset($product['SHAPE']) || !isset($product['WEIGHT']) || !isset($product['COLOR']) || !isset($product['CLARITY']) || !isset($product['CUT']) || !isset($product['POLISH']) || !isset($product['SYMMETRY']) || !isset($product['FLUORESCENCE']) || !isset($product['GRADING']) || !isset($product['LOCATION']) || !isset($product['IMAGELINK']) || !isset($product['VIDEOLINK']) || !isset($product['CERTIFICATELINK']) || !isset($product['CERT_NO']) || !isset($product['DISCOUNT%']) || !isset($product['RATE_PER_CT'])) {
                 throw new MarvelException("SOME FIELDS ARE MISSING");
             }
-            
+
             if($product['NAME']=="" || $product['STONEID_OR_STYLECODE']=="" || $product['SHAPE']=="" || trim($product['WEIGHT'])=="" || $product['COLOR']=="" || $product['CLARITY']=="" || $product['CUT']=="" || $product['POLISH']=="" || $product['SYMMETRY']=="" || $product['FLUORESCENCE']=="" || $product['GRADING']=="" || $product['LOCATION']=="" || trim($product['DISCOUNT%'])=="" || trim($product['RATE_PER_CT'])=="" )
             {
                 throw new MarvelException("REQUIRED FIELDS CAN'T BE EMPTY AT LINE ".$i+1);
@@ -480,7 +480,7 @@ class ProductController extends CoreController
             ];
             $importedLog = $this->importCsvLogRepository->storeCsv($importCsvObjLog);
         }
-        return $imported;    
+        return $imported;
         //return $products;
             // foreach ($products as $key => $product) {
             //     if (!isset($product['type_id'])) {
@@ -528,7 +528,7 @@ class ProductController extends CoreController
     //             if('SH'.$request->shop_id.'-'.$row2['STONEID_OR_STYLECODE']==$row['stylecode'] || $row2['STONEID_OR_STYLECODE']==$row['stylecode'])
     //             {
     //                 array_push($arrExists,$row['stylecode']);
-    //             }          
+    //             }
     //         }
     //     }
     // }

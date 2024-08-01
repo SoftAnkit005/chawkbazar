@@ -33,8 +33,7 @@ class CheckoutController extends CoreController
             throw new MarvelException(config('shop.app_notice_domain') . 'ERROR.NOT_AUTHORIZED');
         }
     }
-    public function getAllTaxes(){
+public function getAllTaxes(){
         return $this->repository->getAllTaxes();
     }
 }
-

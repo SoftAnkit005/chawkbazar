@@ -39,6 +39,7 @@ export const ProductSearchBlock: FC<ProductGridProps> = ({
     sortedBy: query.sortedBy && (query.sortedBy as string),
     variations: query.variations && (query.variations as string),
     tags: query.tags && (query.tags as string),
+    type_name: query.type_name && (query.type_name as string),
     shape: query.shape && (query.shape as string),
     color: query.color && (query.color as string),
     cut: query.cut && (query.cut as string),

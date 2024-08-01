@@ -35,11 +35,19 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
   loadingMore,
   fetchNextPage,
 }) => {
+  
   let productlist = flatten(data?.pages?.map((x:any)=>{
     return x?.data;
   }));
+  
+  productlist = flatten(productlist.map((item:any)=>{    
+    item.admin_commission_rate_solitaire_customer = item.shop.balance.admin_commission_rate_solitaire_customer;
+    return item;
+  }));
+  // console.log('data',productlist)
   const { me } = useUser();
   let stone_extra = 2;
+ 
   let customer_type = orderBy(me?.shops,['customer_type'],['asc'])[0]?.customer_type || null;
   //let admin_commission_rate = orderBy(me?.shops,['customer_type'],['asc'])[0]?.balance?.admin_commission_rate_solitaire || 0;
   const { t } = useTranslation();
@@ -89,6 +97,7 @@ function addToCart(product:any) {
 
   function getShortForm(value:string)
   {
+    
     if(value == "IDEAL")
     {
       return "ID"
@@ -146,6 +155,16 @@ function addToCart(product:any) {
 			className: "cursor-pointer",
 			dataIndex: "stylecode",
 			key: "stylecode",
+			align: alignLeft,
+			width: 90,
+			ellipsis: true,
+//			onHeaderCell: () => onHeaderClick("stylecode"),
+		},
+    {
+			title:"Sheet Type",
+			className: "cursor-pointer",
+			dataIndex: "type_name",
+			key: "type_name",
 			align: alignLeft,
 			width: 90,
 			ellipsis: true,
@@ -268,8 +287,7 @@ render: (size:number) => (
 	//		onHeaderCell: () => onHeaderClick("grading"),
 		},
 		{
-			title: "Location"
-					,
+			title: "Location",
 			className: "cursor-pointer",
 			dataIndex: "location",
 			key: "location",
@@ -278,18 +296,40 @@ render: (size:number) => (
 			ellipsis: true,
 			//onHeaderCell: () => onHeaderClick("location"),
 		},
+    {
+      title: "Rap Rate",
+      className: "cursor-pointer",
+      dataIndex: "rap_rate",
+      key: "rap_rate",
+      align: "right",
+      width: 90,
+      ellipsis: true,
+      
+    },
 		{
-			title: "Discount %",
-			className: "cursor-pointer",
-			dataIndex: "discount",
-			key: "discount",
-			align: alignRight,
-			width: 90,
-			ellipsis: true,
-			render: (discount:number) => (
-				<span className="whitespace-nowrap truncate">{(discount == null ? 0 : Math.abs(discount).toFixed(2))+" %"}</span>
-			),
-		},
+      title: "Discount %",
+      className: "cursor-pointer",
+      dataIndex: "discount",
+      key: "discount",
+      align: "right",
+      width: 90,
+      ellipsis: true,
+      render: (discount: number, record: any) => {
+        // Assuming customer_type is accessible from the record
+        // const customer_type = record.customer_type;
+    
+        // Conditionally render discount or customer_discount based on customer_type
+        // const displayDiscount = customer_type === 1;
+    
+        return (
+          <span className="whitespace-nowrap truncate">-
+            {customer_type ? 
+              (discount == null ? "0 %" : Math.abs(discount).toFixed(2) + " %")
+              : (record.customer_discount == null ? "0 %" : Math.abs(record.customer_discount).toFixed(2) + " %")}
+          </span>
+        );
+      },
+    },
 		{
 			title: "Rate Per Ct",
 			className: "cursor-pointer",
@@ -298,8 +338,9 @@ render: (size:number) => (
 			align: alignRight,
 			width: 90,
 			ellipsis: true,
-			render: (rate_per_unit:number) => (
-				<span className="whitespace-nowrap truncate">{"$"+(rate_per_unit == null ? "" : Number(((!customer_type || customer_type == 1) ? stone_extra : 1) * Number(rate_per_unit)).toFixed(0))}</span>
+			render: (rate_per_unit:number,record: any) => (
+        
+				<span className="whitespace-nowrap truncate">{"$"+(rate_per_unit == null ? "" : Number(((!customer_type || customer_type == 1) ? record.rate_per_unit_customer : rate_per_unit)).toFixed(0))}</span>
 			),
 			
 		},
@@ -311,8 +352,9 @@ render: (size:number) => (
 			align: alignRight,
 			width: 90,
 //			onHeaderCell: () => onHeaderClick("price"),
-			render: (value: number, record: Product) => {
-        value = (!customer_type || customer_type == 1 ? stone_extra : 1) * Number(value);
+			render: (value: number, record: any) => {
+        console.log('val',record)
+        value = (!customer_type || customer_type == 1 ? record.rate_per_unit_customer * record.size : record.rate_per_unit * record.size);
 					return (
 						<span className="whitespace-nowrap" title={value.toFixed(0)}>
 							{"$"+value.toFixed(0)}

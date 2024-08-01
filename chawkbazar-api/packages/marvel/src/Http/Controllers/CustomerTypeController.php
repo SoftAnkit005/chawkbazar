@@ -44,7 +44,7 @@ class CustomerTypeController extends CoreController
         return $this->repository->storeCustomerType($request);
     }
 
-    public function update(CustomerTypeRequest $request, $id)
+public function update(CustomerTypeRequest $request, $id)
     {
         $request->id = $id;
         try {

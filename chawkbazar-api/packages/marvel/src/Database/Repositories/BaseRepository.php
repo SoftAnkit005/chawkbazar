@@ -189,7 +189,9 @@ abstract class BaseRepository extends Repository implements CacheableInterface
 
         $header = null;
         $data = array();
+        return "hie";   
         if (($handle = fopen($filename, 'r')) !== false) {
+
             while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
                 if (!$header) {
                     $exclude = ['id', 'slug', 'deleted_at', 'created_at', 'updated_at', 'shipping_class_id'];

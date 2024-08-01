@@ -7,22 +7,41 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "next-i18next";
 import * as yup from "yup";
 import { useUI } from "@contexts/ui.context";
+import { ContactFormValues, useContactMutation } from "@framework/contact/contact.mutation";
+import { toast } from "react-toastify";
 
 type FormValues = {
   subscribe_email: string;
 };
 
+// const defaultValues = {
+//   subscribe_email: "",
+// };
+
 const defaultValues = {
-  subscribe_email: "",
+  name: "",
+  email: "",
+  subject: "Subscription Conformation",
+  description: "Welecom, Onboard, Congratulations on Subscriber Membership. You will have latest updates and offers all about Zwerler. To unsubscribe the subscriber list click the link "
 };
 
 // Yup validation
-const subscriptionFormSchema = yup.object().shape({
-  subscribe_email: yup
+// const subscriptionFormSchema = yup.object().shape({
+//   subscribe_email: yup
+//     .string()
+//     .email("forms:email-error")
+//     .required("forms:email-required"),
+// });
+
+const contactFormSchema = yup.object().shape({  
+  email: yup
     .string()
-    .email("forms:email-error")
-    .required("forms:email-required"),
+    .email('forms:error-email-format')
+    .required('forms:error-email-required'),
+  subject: yup.string().required('forms:error-subject-required'),
+  description: yup.string().required('forms:error-description-required'),
 });
+
 
 type CustomFormProps = {
   status: "error" | "sending" | "success" | null;
@@ -37,14 +56,23 @@ const CustomForm: React.FC<CustomFormProps> = ({
   onValidated,
   layout,
 }) => {
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   reset,
+  //   formState: { errors },
+  // } = useForm<FormValues>({
+  //   defaultValues,
+  //   resolver: yupResolver(subscriptionFormSchema),
+  // });
+  const { mutate, isLoading: loading } = useContactMutation();
   const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues,
-    resolver: yupResolver(subscriptionFormSchema),
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<ContactFormValues>({
+    resolver: yupResolver(contactFormSchema),
+    defaultValues
   });
   const { t } = useTranslation();
   const { closeModal } = useUI();
@@ -63,16 +91,28 @@ const CustomForm: React.FC<CustomFormProps> = ({
     }
   }, [message])
 
-  async function onSubmit(input: FormValues) {
-    await onValidated({ EMAIL: input.subscribe_email });
+  // async function onSubmit(input: FormValues) {
+  //   await onValidated({ EMAIL: input.subscribe_email });
 
-    // Reset the form
-    reset({subscribe_email: "",})
+  //   // Reset the form
+  //   reset({subscribe_email: "",})
 
-    // If layout newsletter then close the model
-    if (layout === "newsletter") {
-      closeModal();
-    }
+  //   // If layout newsletter then close the model
+  //   if (layout === "newsletter") {
+  //     closeModal();
+  //   }
+  // }
+
+  async function onSubmit(values: ContactFormValues) {
+    await mutate(values, {
+      onSuccess: (data) => {
+        if (data?.success){
+          toast.success(t('contact-success-message'));
+        }else {
+          toast.error(t(data?.message!));
+        }
+      }
+    });
   }
 
   // Generate layout className
@@ -107,12 +147,12 @@ const CustomForm: React.FC<CustomFormProps> = ({
           variant="solid"
           className="w-full"
           inputClassName={layoutClassName.inputClassName}
-          {...register("subscribe_email")}
-          errorKey={errors.subscribe_email?.message}
+          {...register("email")}
+          errorKey={errors.email?.message}
         />
         <Button
           className={layoutClassName.buttonClassName}
-          loading={status === "sending"}
+          loading={loading}
           style={{ background: '#5d6b6b' }}
         >
           <span className={layoutClassName.buttonTextClassName}>

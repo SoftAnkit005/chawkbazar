@@ -970,6 +970,11 @@ export declare type ApproveShopInput = {
   markup_type:Scalars["String"];
   making_charges_markup:Scalars["Float"];
   wastage_markup:Scalars["Float"];
+  admin_commission_rate_customer: Scalars["Float"];
+  admin_commission_rate_solitaire_customer: Scalars["Float"];
+  markup_type_customer:Scalars["String"];
+  making_charges_markup_customer:Scalars["Float"];
+  wastage_markup_customer:Scalars["Float"];
 };
 export declare type ApproveBusinessInput = {
   user_id: Scalars["ID"];
@@ -1040,6 +1045,8 @@ export declare type Balance = {
   id?: Maybe<Scalars["ID"]>;
   admin_commission_rate?: Maybe<Scalars["Float"]>;
   admin_commission_rate_solitaire?: Scalars["Float"];
+  admin_commission_rate_customer: Scalars["Float"];
+  admin_commission_rate_solitaire_customer: Scalars["Float"];
   shop?: Maybe<Shop>;
   total_earnings?: Maybe<Scalars["Float"]>;
   withdrawn_amount?: Maybe<Scalars["Float"]>;

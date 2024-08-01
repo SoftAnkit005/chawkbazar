@@ -156,6 +156,7 @@ class UserController extends CoreController
         $user = User::where('email', $request->email)->where('is_active', true)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
+          
             return ["token" => null, "permissions" => []];
         }
         return ["token" => $user->createToken('auth_token')->plainTextToken, "permissions" => $user->getPermissionNames()];
@@ -205,7 +206,7 @@ class UserController extends CoreController
                 'straddress'=> $request->straddress,
                 'is_approved'=>$request->is_approved,
                 'customer_type'=> $request->customer_type
-            ]); 
+            ]);
             $url = 'http://api.ask4sms.in/sms/1/text/query?username=zweler&password=Zweler@321&from=ZWEVEN&to=91'.str_replace('+91', '',$request->mobile).'&text=Hello%20'.str_replace(' ', '%20', $request->name).'%2C%0AThank%20you%20for%20registering%20with%20Zweler%21%20Your%20account%20is%20currently%20being%20processed%2C%20and%20we%20will%20notify%20you%20once%20your%20registration%20is%20approved%20after%20document%20verification.%20Feel%20free%20to%20explore%20our%20platform%20and%20get%20ready%20to%20elevate%20your%20jewellery%20business%21%0ABest%20regards%2C%0ATeam%20Zweler%20-ZWELER&indiaDltContentTemplateId=1107169632532933613&indiaDltPrincipalEntityId=1101660960000072501';
             $crl = curl_init();
             curl_setopt($crl, CURLOPT_URL, $url);
@@ -296,7 +297,6 @@ class UserController extends CoreController
             return 0;
         }
     }
-    
     public function banUser(Request $request)
     {
         $user = $request->user();

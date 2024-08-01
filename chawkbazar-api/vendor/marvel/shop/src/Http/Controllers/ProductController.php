@@ -39,16 +39,17 @@ class ProductController extends CoreController
      *
      * @param Request $request
      * @return Collection|Product[]
-     */ 
+     */
 
     public function index(Request $request)
     {
+
         $limit = $request->limit ?   $request->limit : 15;
         if(substr($request->search, 0, 2) === "id")
         {
             return $this->repository->withCount('orders')->with(['type', 'shop', 'categories', 'tags', 'variations.attribute','variation_options'])->whereIn("id",explode(",",str_replace("id:","",$request->search)))->paginate($limit);
         }
-        $returnList = $this->repository->withCount('orders')->with(['type', 'shop', 'categories', 'tags', 'variations.attribute'])->paginate($limit);
+        $returnList = $this->repository->withCount('orders')->with(['type', 'shop', 'categories', 'tags', 'variations.attribute','shop.balance'])->paginate($limit);
         if(substr($request->search, 0, 4) === "name")
         {
             $returnList = $this->repository->withCount('orders')->with(['type', 'shop', 'categories', 'tags', 'variations.attribute'])->orWhere("stylecode","like","%".explode(";",str_replace("name:","",$request->search))[0]."%")->paginate($limit);
@@ -176,6 +177,10 @@ class ProductController extends CoreController
     public function update(ProductUpdateRequest $request, $id)
     {
         $request->id = $id;
+        echo '<pre>';
+        print_r($request->all());
+        echo '</pre>';
+        die;
         return $this->updateProduct($request);
     }
 
@@ -188,6 +193,27 @@ class ProductController extends CoreController
             throw new MarvelException(config('shop.app_notice_domain') . 'ERROR.NOT_AUTHORIZED');
         }
     }
+
+    public function multiplepublish(Request $request)
+    {
+        if ($request->product_id) {
+            $product_ids = explode(',', $request->product_id);
+
+            foreach ($product_ids as $product_id) {
+                $product = Product::where('id', $product_id)->first();
+
+                if(empty($product)) {
+                    return response()->json(['message' => 'Products Not Found']);
+                }else
+                {
+                    $product->status = 'publish';
+                    $product->save();
+                }
+            }
+            return response()->json(['message' => 'Products published successfully']);
+        }
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -366,8 +392,16 @@ class ProductController extends CoreController
         }
         if (isset($shop_id)) {
             $file = $uploadedCsv->storePubliclyAs('csv-files', 'solitaire-products-' . $shop_id . '.' . $uploadedCsv->getClientOriginalExtension(), 'public');
-            $fileLog = $uploadedCsv->storePubliclyAs('csv-files-log', 'solitaire-products-' . $shop_id .date(DATE_ATOM).'.'. $uploadedCsv->getClientOriginalExtension(), 'public');
-            $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()) . '/' . $file);
+            $fileLog = $uploadedCsv->storePubliclyAs('csv-files-log', 'solitaire-products-' . $shop_id .date('Y-m-d').'.'. $uploadedCsv->getClientOriginalExtension(), 'public');
+            // $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()) . '/' . $file);
+
+             $filePath = public_path('storage/csv-files/' . basename($file));
+            // echo '<pre>';
+            // print_r($filePath);
+            // echo '</pre>';
+            // die;
+            // Convert CSV to array
+            $products = $this->repository->csvToArray($filePath);
             if(count($products)>2000){
                 throw new MarvelException("CAN'T IMPORT MORE THAN 2000 PRODUCTS AT A TIME");
             }
@@ -383,12 +417,14 @@ class ProductController extends CoreController
                 $j++;
             }
             foreach ($products as $key => $product) {
+
             if (!isset($product['STONEID_OR_STYLECODE']) || !isset($product['SHAPE']) || !isset($product['WEIGHT']) || !isset($product['COLOR']) || !isset($product['CLARITY']) || !isset($product['CUT']) || !isset($product['POLISH']) || !isset($product['SYMMETRY']) || !isset($product['FLUORESCENCE']) || !isset($product['GRADING']) || !isset($product['LOCATION']) || !isset($product['IMAGELINK']) || !isset($product['VIDEOLINK']) || !isset($product['CERTIFICATELINK']) || !isset($product['CERT_NO']) || !isset($product['DISCOUNT%']) || !isset($product['RATE_PER_CT'])) {
                 throw new MarvelException("SOME FIELDS ARE MISSING");
             }
-            
+
             if($product['NAME']=="" || $product['STONEID_OR_STYLECODE']=="" || $product['SHAPE']=="" || trim($product['WEIGHT'])=="" || $product['COLOR']=="" || $product['CLARITY']=="" || $product['CUT']=="" || $product['POLISH']=="" || $product['SYMMETRY']=="" || $product['FLUORESCENCE']=="" || $product['GRADING']=="" || $product['LOCATION']=="" || trim($product['DISCOUNT%'])=="" || trim($product['RATE_PER_CT'])=="" )
             {
+
                 throw new MarvelException("REQUIRED FIELDS CAN'T BE EMPTY AT LINE ".$i+1);
             }
             if(!in_array($product['SHAPE'],array("ROUND","PEAR","OVAL","MARQUISE","HEART","RADIANT","PRINCESS","EMERALD","ASSCHER","SQ.EMERALD","ASSCHER & SQ.EMELARD","SQUARE RADIANT","CUSHION","BAGUETTE","EUROPEAN CUT")))
@@ -443,9 +479,11 @@ class ProductController extends CoreController
             }
             $i++;
         }
+        $sheet_type = $request->sheet_type;
         $existingImportedCsv = $this->importCsvRepository->all()->whereIn('type_id',6)->whereIn('shop_id',$shop_id)->first();
         if($existingImportedCsv)
         {
+
             $updateImportCsvObj = [
                 'id'=>$existingImportedCsv->id,
                 'csv_link'=>$file,
@@ -457,6 +495,7 @@ class ProductController extends CoreController
                 'csv_link'=>$fileLog,
                 'shop_name'=>$shop_name,
                 'type_id'=>6,
+                'sheet_type_id'=>$sheet_type,
                 'type_name'=>$type_name
             ];
             $importedLog = $this->importCsvLogRepository->storeCsv($importCsvObjLog);
@@ -468,6 +507,7 @@ class ProductController extends CoreController
                 'csv_link'=>$file,
                 'shop_name'=>$shop_name,
                 'type_id'=>6,
+                'sheet_type'=>$sheet_type,
                 'type_name'=>$type_name
             ];
             $imported = $this->importCsvRepository->storeCsv($importCsvObj);
@@ -476,29 +516,30 @@ class ProductController extends CoreController
                 'csv_link'=>$fileLog,
                 'shop_name'=>$shop_name,
                 'type_id'=>6,
+                'sheet_type_id'=>$sheet_type,
                 'type_name'=>$type_name
             ];
             $importedLog = $this->importCsvLogRepository->storeCsv($importCsvObjLog);
         }
-        return $imported;    
+        return $imported;
         //return $products;
-            // foreach ($products as $key => $product) {
-            //     if (!isset($product['type_id'])) {
-            //         throw new MarvelException("MARVEL_ERROR.WRONG_CSV");
-            //     }
-            //     unset($product['id']);
-            //     $product['shop_id'] = $shop_id;
-            //     $product['image'] = json_decode($product['image'], true);
-            //     $product['gallery'] = json_decode($product['gallery'], true);
-            //     try {
-            //         $type = Type::findOrFail($product['type_id']);
-            //         if (isset($type->id)) {
-            //             Product::firstOrCreate($product);
-            //         }
-            //     } catch (Exception $e) {
-            //     }
-            // }
-//            return true;
+                // foreach ($products as $key => $product) {
+                //     if (!isset($product['type_id'])) {
+                //         throw new MarvelException("MARVEL_ERROR.WRONG_CSV");
+                //     }
+                //     unset($product['id']);
+                //     $product['shop_id'] = $shop_id;
+                //     $product['image'] = json_decode($product['image'], true);
+                //     $product['gallery'] = json_decode($product['gallery'], true);
+                //     try {
+                //         $type = Type::findOrFail($product['type_id']);
+                //         if (isset($type->id)) {
+                //             Product::firstOrCreate($product);
+                //         }
+                //     } catch (Exception $e) {
+                //     }
+                // }
+    //            return true;
         }
     }
 
@@ -513,7 +554,12 @@ class ProductController extends CoreController
     {
         $shop = Shop::findOrFail($request->shop_id);
         $import_csv = $this->importCsvRepository->findOrFail($request->id);
-        $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()).'/'.$import_csv->csv_link);
+
+        // $products = $this->repository->csvToArray(str_replace("/storage","/public/storage",storage_path()).'/'.$import_csv->csv_link);
+        $file = $import_csv->csv_link;
+        $filePath = public_path('storage/csv-files/' . basename($file));
+
+        $products = $this->repository->csvToArray($filePath);
         $product_chunks = array_chunk($products,250);
         $existing_solitaire_products = $this->repository->all()->where('shop_id',$request->shop_id)->where('type_id',6);
     //     $arrExistsMain = [];
@@ -528,7 +574,7 @@ class ProductController extends CoreController
     //             if('SH'.$request->shop_id.'-'.$row2['STONEID_OR_STYLECODE']==$row['stylecode'] || $row2['STONEID_OR_STYLECODE']==$row['stylecode'])
     //             {
     //                 array_push($arrExists,$row['stylecode']);
-    //             }          
+    //             }
     //         }
     //     }
     // }
@@ -544,247 +590,287 @@ class ProductController extends CoreController
     //     }
         foreach($product_chunks as $key=> $products)
         {
-        foreach ($products as $key => $row) {
-            $already_exists = $existing_solitaire_products->where('stylecode','SH'.$request->shop_id.'-'.$row['STONEID_OR_STYLECODE'])->first();
-            if($row['CUT'] == "A")
-            {
-                $row['CUT'] = "ANY";
-            }
-            if($row['CUT'] == "ID")
-            {
-                $row['CUT'] = "IDEAL";
-            }
-            if($row['CUT'] == "EX")
-            {
-                $row['CUT'] = "EXCELLENT";
-            }
-            if($row['CUT'] == "VG")
-            {
-                $row['CUT'] = "VERY GOOD";
-            }
-            if($row['CUT'] == "G")
-            {
-                $row['CUT'] = "GOOD";
-            }
-            if($row['CUT'] == "F")
-            {
-                $row['CUT'] = "FAIR";
-            }
-            if($row['CUT'] == "P")
-            {
-                $row['CUT'] = "POOR";
-            }
-            if($row['POLISH'] == "A")
-            {
-                $row['POLISH'] = "ANY";
-            }
-            if($row['POLISH'] == "ID")
-            {
-                $row['POLISH'] = "IDEAL";
-            }
-            if($row['POLISH'] == "EX")
-            {
-                $row['POLISH'] = "EXCELLENT";
-            }
-            if($row['POLISH'] == "VG")
-            {
-                $row['POLISH'] = "VERY GOOD";
-            }
-            if($row['POLISH'] == "G")
-            {
-                $row['POLISH'] = "GOOD";
-            }
-            if($row['POLISH'] == "F")
-            {
-                $row['POLISH'] = "FAIR";
-            }
-            if($row['POLISH'] == "P")
-            {
-                $row['POLISH'] = "POOR";
-            }
-            if($row['SYMMETRY'] == "A")
-            {
-                $row['SYMMETRY'] = "ANY";
-            }
-            if($row['SYMMETRY'] == "ID")
-            {
-                $row['SYMMETRY'] = "IDEAL";
-            }
-            if($row['SYMMETRY'] == "EX")
-            {
-                $row['SYMMETRY'] = "EXCELLENT";
-            }
-            if($row['SYMMETRY'] == "VG")
-            {
-                $row['SYMMETRY'] = "VERY GOOD";
-            }
-            if($row['SYMMETRY'] == "G")
-            {
-                $row['SYMMETRY'] = "GOOD";
-            }
-            if($row['SYMMETRY'] == "F")
-            {
-                $row['SYMMETRY'] = "FAIR";
-            }
-            if($row['SYMMETRY'] == "P")
-            {
-                $row['SYMMETRY'] = "POOR";
-            }
-            if($row['FLUORESCENCE'] == "N")
-            {
-                $row['FLUORESCENCE'] = "NONE";
-            }
-            if($row['FLUORESCENCE'] == "VS")
-            {
-                $row['FLUORESCENCE'] = "VERY SLIGHT";
-            }
-            if($row['FLUORESCENCE'] == "FS")
-            {
-                $row['FLUORESCENCE'] = "FAINT/SLIGHT";
-            }
-            if($row['FLUORESCENCE'] == "F")
-            {
-                $row['FLUORESCENCE'] = "FAINT";
-            }
-            if($row['FLUORESCENCE'] == "S")
-            {
-                $row['FLUORESCENCE'] = "SLIGHT";
-            }
-            if($row['FLUORESCENCE'] == "M")
-            {
-                $row['FLUORESCENCE'] = "MEDIUM";
-            }
-            if($row['FLUORESCENCE'] == "ST")
-            {
-                $row['FLUORESCENCE'] = "STRONG";
-            }
-            if($row['FLUORESCENCE'] == "VST")
-            {
-                $row['FLUORESCENCE'] = "VERY STRONG";
-            }
-            if(!isset($already_exists))
-            {
-            $row['name'] = $row['NAME'];
-            $row['cert_no'] = $row['CERT_NO'];
-            // $row['description'] = $row['DESCRIPTION'];
-            $row['stylecode'] = 'SH'.$request->shop_id.'-'.$row['STONEID_OR_STYLECODE'];
-            $row['sku'] = $row['stylecode'];
-            unset($row['STONEID_OR_STYLECODE']);
-            $row['type_id'] = 6;
-            $row['size'] = trim($row['WEIGHT']);
-            $row['rate_per_unit'] = trim($row['RATE_PER_CT']);
-            $row['discount'] = trim($row['DISCOUNT%']);
-            $row['rate_per_unit_before_commission'] = $row['rate_per_unit'];
-            //$row['price'] = ($row['rate_per_unit'] + ($row['rate_per_unit']*($row['discount']/100))) * $row['size'];
-            $derived_rpu = $row['rate_per_unit'] / (1+($row['discount']/100));
-            if(isset($shop->balance->admin_commission_rate_solitaire) && $shop->balance->admin_commission_rate_solitaire > 0)
-            {
-                $row['commission'] = $shop->balance->admin_commission_rate_solitaire;
-                $discountAfterCommission = $row['discount']+$shop->balance->admin_commission_rate_solitaire;
-                $row['rate_per_unit'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
-                $row['discount'] = $discountAfterCommission;
-            }
-            else
-            {
-                $row['commission'] = 0;
-                $discountAfterCommission = $row['discount'];
-                $row['rate_per_unit'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
-                $row['discount'] = $discountAfterCommission;
-            }
-            $row['price'] = $row['rate_per_unit'] * $row['size'];
-            $row['max_price'] = $row['price'];
-            $row['min_price'] = $row['price'];
-            $row['sale_price'] = (float)$row['price']-1;
-            $row['shop_id'] = $request->shop_id;
-            $row['quantity'] = 1;
-            $row['in_stock'] = 1;
-            $row['is_taxable'] = 0;
-            $row['status'] = 'publish';
-            $row['product_type'] = 'simple';
-            $row['image_link'] = $row['IMAGELINK'];
-            $row['video_link'] = $row['VIDEOLINK'];
-            $row['certificate_link'] = $row['CERTIFICATELINK'];
-            $row['shape'] = $row['SHAPE'];
-            $row['color'] = $row['COLOR'];
-            $row['buy_back_policy'] = $shop['buy_back_policy'];
-            $row['clarity'] = $row['CLARITY'];
-            $row['cut'] = $row['CUT'];
-            $row['polish'] = $row['POLISH'];
-            $row['symmetry'] = $row['SYMMETRY'];
-            $row['fluorescence'] = $row['FLUORESCENCE'];
-            $row['grading'] = $row['GRADING'];
-            $row['location'] = $row['LOCATION'];
-            unset($row['NAME']);
-            unset($row['CERT_NO']);
-            // unset($row['DESCRIPTION']);
-            unset($row['SHAPE']);
-            unset($row['WEIGHT']);
-            unset($row['COLOR']);
-            unset($row['CLARITY']);
-            unset($row['CUT']);
-            unset($row['POLISH']);
-            unset($row['SYMMETRY']);
-            unset($row['FLUORESCENCE']);
-            unset($row['GRADING']);
-            unset($row['LOCATION']);
-            unset($row['IMAGELINK']);
-            unset($row['VIDEOLINK']);
-            unset($row['CERTIFICATELINK']);
-            unset($row['DISCOUNT%']);
-            unset($row['RATE_PER_CT']);
-            $createdProduct = $this->repository->create($row);
-            $createdProduct->categories()->attach([24,34]);
-            $createdProduct->tags()->attach([158]);
-            }
-            else
-            {
-            $row['rate_per_unit_before_commission'] = trim($row['RATE_PER_CT']);
-                $derived_rpu = trim($row['RATE_PER_CT']) / (1+(trim($row['DISCOUNT%'])/100));
-            if(isset($shop->balance->admin_commission_rate_solitaire) && $shop->balance->admin_commission_rate_solitaire > 0)
-            {
-                $row['commission'] = $shop->balance->admin_commission_rate_solitaire;
-                $discountAfterCommission = trim($row['DISCOUNT%'])+$shop->balance->admin_commission_rate_solitaire;
-                $row['RATE_PER_CT'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
-                $row['DISCOUNT%'] = $discountAfterCommission;
-            }
-            else
-            {
-                $row['commission'] = 0;
-                $discountAfterCommission = trim($row['DISCOUNT%']);
-                $row['RATE_PER_CT'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
-                $row['DISCOUNT%'] = $discountAfterCommission;
-            }
-                $update_obj = [
-                    'name' => $row['NAME'],
-                    'cert_no' => $row['CERT_NO'],
-                    //'description' => $row['DESCRIPTION'],
-                    'rate_per_unit' => trim($row['RATE_PER_CT']),
-                    'price' => trim($row['RATE_PER_CT']) * trim($row['WEIGHT']),
-                    'max_price' => trim($row['RATE_PER_CT']),
-                    'min_price' => trim($row['RATE_PER_CT']),
-                    'sale_price' => (float)trim($row['RATE_PER_CT'])-1,
-                    'image_link' => $row['IMAGELINK'],
-                    'video_link' => $row['VIDEOLINK'],
-                    'certificate_link' => $row['CERTIFICATELINK'],
-                    'shape' => $row['SHAPE'],
-                    'size' => trim($row['WEIGHT']),
-                    'color' => $row['COLOR'],
-                    'status' => 'publish',
-                    'clarity' => $row['CLARITY'],
-                    'cut' => $row['CUT'],
-                    'polish' => $row['POLISH'],
-                    'symmetry' => $row['SYMMETRY'],
-                    'fluorescence' => $row['FLUORESCENCE'],
-                    'grading' => $row['GRADING'],
-                    'location' => $row['LOCATION'],
-                    'discount' => trim($row['DISCOUNT%']),
-                    'commission' => trim($row['commission']),
-                    'rate_per_unit_before_commission' => $row['rate_per_unit_before_commission']
-                ];
-                $already_exists->update($update_obj);
+            foreach ($products as $key => $row) {
+
+
+                if (isset($row['TYPE'])) {
+
+                    $type_name = $row['TYPE'];
+                }else
+                {
+                    $type_name = 'Natural';
+                }
+
+                $already_exists = $existing_solitaire_products->where('stylecode','SH'.$request->shop_id.'-'.$row['STONEID_OR_STYLECODE'])->first();
+                if($row['CUT'] == "A")
+                {
+                    $row['CUT'] = "ANY";
+                }
+                if($row['CUT'] == "ID")
+                {
+                    $row['CUT'] = "IDEAL";
+                }
+                if($row['CUT'] == "EX")
+                {
+                    $row['CUT'] = "EXCELLENT";
+                }
+                if($row['CUT'] == "VG")
+                {
+                    $row['CUT'] = "VERY GOOD";
+                }
+                if($row['CUT'] == "G")
+                {
+                    $row['CUT'] = "GOOD";
+                }
+                if($row['CUT'] == "F")
+                {
+                    $row['CUT'] = "FAIR";
+                }
+                if($row['CUT'] == "P")
+                {
+                    $row['CUT'] = "POOR";
+                }
+                if($row['POLISH'] == "A")
+                {
+                    $row['POLISH'] = "ANY";
+                }
+                if($row['POLISH'] == "ID")
+                {
+                    $row['POLISH'] = "IDEAL";
+                }
+                if($row['POLISH'] == "EX")
+                {
+                    $row['POLISH'] = "EXCELLENT";
+                }
+                if($row['POLISH'] == "VG")
+                {
+                    $row['POLISH'] = "VERY GOOD";
+                }
+                if($row['POLISH'] == "G")
+                {
+                    $row['POLISH'] = "GOOD";
+                }
+                if($row['POLISH'] == "F")
+                {
+                    $row['POLISH'] = "FAIR";
+                }
+                if($row['POLISH'] == "P")
+                {
+                    $row['POLISH'] = "POOR";
+                }
+                if($row['SYMMETRY'] == "A")
+                {
+                    $row['SYMMETRY'] = "ANY";
+                }
+                if($row['SYMMETRY'] == "ID")
+                {
+                    $row['SYMMETRY'] = "IDEAL";
+                }
+                if($row['SYMMETRY'] == "EX")
+                {
+                    $row['SYMMETRY'] = "EXCELLENT";
+                }
+                if($row['SYMMETRY'] == "VG")
+                {
+                    $row['SYMMETRY'] = "VERY GOOD";
+                }
+                if($row['SYMMETRY'] == "G")
+                {
+                    $row['SYMMETRY'] = "GOOD";
+                }
+                if($row['SYMMETRY'] == "F")
+                {
+                    $row['SYMMETRY'] = "FAIR";
+                }
+                if($row['SYMMETRY'] == "P")
+                {
+                    $row['SYMMETRY'] = "POOR";
+                }
+                if($row['FLUORESCENCE'] == "N")
+                {
+                    $row['FLUORESCENCE'] = "NONE";
+                }
+                if($row['FLUORESCENCE'] == "VS")
+                {
+                    $row['FLUORESCENCE'] = "VERY SLIGHT";
+                }
+                if($row['FLUORESCENCE'] == "FS")
+                {
+                    $row['FLUORESCENCE'] = "FAINT/SLIGHT";
+                }
+                if($row['FLUORESCENCE'] == "F")
+                {
+                    $row['FLUORESCENCE'] = "FAINT";
+                }
+                if($row['FLUORESCENCE'] == "S")
+                {
+                    $row['FLUORESCENCE'] = "SLIGHT";
+                }
+                if($row['FLUORESCENCE'] == "M")
+                {
+                    $row['FLUORESCENCE'] = "MEDIUM";
+                }
+                if($row['FLUORESCENCE'] == "ST")
+                {
+                    $row['FLUORESCENCE'] = "STRONG";
+                }
+                if($row['FLUORESCENCE'] == "VST")
+                {
+                    $row['FLUORESCENCE'] = "VERY STRONG";
+                }
+                if(!isset($already_exists))
+                {
+                    $row['name'] = $row['NAME'];
+                    $row['cert_no'] = $row['CERT_NO'];
+                    // $row['description'] = $row['DESCRIPTION'];
+                    $row['type_name'] = $type_name;
+                    $row['stylecode'] = 'SH'.$request->shop_id.'-'.$row['STONEID_OR_STYLECODE'];
+                    $row['sku'] = $row['stylecode'];
+                    unset($row['STONEID_OR_STYLECODE']);
+                    $row['type_id'] = 6;
+                    $row['size'] = trim($row['WEIGHT']);
+                    $row['rate_per_unit'] = trim($row['RATE_PER_CT']);
+                    $row['discount'] = abs(trim($row['DISCOUNT%']));
+                    $row['rate_per_unit_before_commission'] = $row['rate_per_unit'];
+                    //$row['price'] = ($row['rate_per_unit'] + ($row['rate_per_unit']*($row['discount']/100))) * $row['size'];
+                    // $derived_rpu = $row['rate_per_unit'] / (1+($row['discount']/100));
+                    if(isset($shop->balance->admin_commission_rate_solitaire) && $shop->balance->admin_commission_rate_solitaire > 0)
+                    {
+                        $row['commission'] = $shop->balance->admin_commission_rate_solitaire;
+                        $discountAfterCommission = $row['discount'] - $shop->balance->admin_commission_rate_solitaire;
+                        $row['customer_discount'] = $row['discount'] - $shop->balance->admin_commission_rate_solitaire_customer;
+                        // $row['rate_per_unit'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
+                        // $row['rate_per_unit'] = ($row['RAPRATE'] * $discountAfterCommission) / 100;
+                        $discount_price_customer = ($row['RAPRATE'] * $row['customer_discount']) / 100;
+                        $row['rate_per_unit_customer'] = $row['RAPRATE'] - $discount_price_customer;
+                        $discount_price = ($row['RAPRATE'] * $discountAfterCommission) / 100;
+                        $row['rate_per_unit'] = $row['RAPRATE'] - $discount_price;
+                        $row['discount'] = $discountAfterCommission;
+                    }
+                    else
+                    {
+                        $row['commission'] = 0;
+                        $discountAfterCommission = $row['discount'];
+                        // $row['rate_per_unit'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
+                        $row['rate_per_unit'] = $row['RATE_PER_CT'];
+                        $row['rate_per_unit_customer'] = $row['RATE_PER_CT'];
+                        $row['discount'] = $discountAfterCommission;
+                    }
+                    $row['price'] = $row['rate_per_unit'] * $row['size'];
+                    $row['max_price'] = $row['price'];
+                    $row['min_price'] = $row['price'];
+                    $row['sale_price'] = (float)$row['price']-1;
+                    $row['shop_id'] = $request->shop_id;
+                    $row['quantity'] = 1;
+                    $row['in_stock'] = 1;
+                    $row['is_taxable'] = 0;
+                    $row['status'] = 'publish';
+                    $row['product_type'] = 'simple';
+                    $row['image_link'] = $row['IMAGELINK'];
+                    $row['video_link'] = $row['VIDEOLINK'];
+                    $row['certificate_link'] = $row['CERTIFICATELINK'];
+                    $row['shape'] = $row['SHAPE'];
+                    $row['color'] = $row['COLOR'];
+                    $row['buy_back_policy'] = $shop['buy_back_policy'];
+                    $row['clarity'] = $row['CLARITY'];
+                    $row['cut'] = $row['CUT'];
+                    $row['polish'] = $row['POLISH'];
+                    $row['symmetry'] = $row['SYMMETRY'];
+                    $row['fluorescence'] = $row['FLUORESCENCE'];
+                    $row['rap_rate'] = $row['RAPRATE'];
+                    $row['amount'] = $row['AMOUNT'];
+                    $row['grading'] = $row['GRADING'];
+                    $row['location'] = $row['LOCATION'];
+                    unset($row['NAME']);
+                    unset($row['CERT_NO']);
+                    // unset($row['DESCRIPTION']);
+                    unset($row['TYPE']);
+                    unset($row['SHAPE']);
+                    unset($row['WEIGHT']);
+                    unset($row['COLOR']);
+                    unset($row['CLARITY']);
+                    unset($row['CUT']);
+                    unset($row['POLISH']);
+                    unset($row['SYMMETRY']);
+                    unset($row['FLUORESCENCE']);
+                    unset($row['RAPRATE']);
+                    unset($row['AMOUNT']);
+                    unset($row['GRADING']);
+                    unset($row['LOCATION']);
+                    unset($row['IMAGELINK']);
+                    unset($row['VIDEOLINK']);
+                    unset($row['CERTIFICATELINK']);
+                    unset($row['DISCOUNT%']);
+                    unset($row['RATE_PER_CT']);
+                    $createdProduct = $this->repository->create($row);
+                    $createdProduct->categories()->attach([24,34]);
+
+
+
+
+                    $createdProduct->tags()->attach([158]);
+                }
+                else
+                {
+                    $row['rate_per_unit_before_commission'] = trim($row['RATE_PER_CT']);
+                        $derived_rpu = trim($row['RATE_PER_CT']) / (1+(trim($row['DISCOUNT%'])/100));
+
+                    if(isset($shop->balance->admin_commission_rate_solitaire) && $shop->balance->admin_commission_rate_solitaire > 0)
+                    {
+                        $row['commission'] = $shop->balance->admin_commission_rate_solitaire;
+                        $discountAfterCommission = abs(trim($row['DISCOUNT%']))-$shop->balance->admin_commission_rate_solitaire;
+                        $row['customer_discount'] = abs(trim($row['DISCOUNT%'])) - $shop->balance->admin_commission_rate_solitaire_customer;
+                        $discount_price_customer = ($row['RAPRATE'] * $row['customer_discount']) / 100;
+                        $row['rate_per_unit_customer'] = $row['RAPRATE'] - $discount_price_customer;
+                        // $row['RATE_PER_CT'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
+                        $discount_price = ($row['RAPRATE'] * $discountAfterCommission) / 100;
+                        $row['RATE_PER_CT'] = $row['RAPRATE'] - $discount_price;
+                        $row['DISCOUNT%'] = $discountAfterCommission;
+                    }
+                    else
+                    {
+                        $row['commission'] = 0;
+                        $discountAfterCommission = abs(trim($row['DISCOUNT%']));
+                        // $row['RATE_PER_CT'] = $derived_rpu - ($derived_rpu - ($derived_rpu*(1+($discountAfterCommission/100))));
+                        $row['rate_per_unit_customer'] = $row['RATE_PER_CT'];
+                        $row['RATE_PER_CT'] = ($row['RAPRATE'] * $discountAfterCommission) / 100;
+                        $row['DISCOUNT%'] = $discountAfterCommission;
+                    }
+                    $update_obj = [
+                        'name' => $row['NAME'],
+                        'cert_no' => $row['CERT_NO'],
+                        'type_name'=> $type_name,
+                        //'description' => $row['DESCRIPTION'],
+                        'rate_per_unit' => trim($row['RATE_PER_CT']),
+                        'rate_per_unit_customer' => trim($row['rate_per_unit_customer']),
+                        'price' => trim($row['RATE_PER_CT']) * trim($row['WEIGHT']),
+                        'max_price' => trim($row['RATE_PER_CT']),
+                        'min_price' => trim($row['RATE_PER_CT']),
+                        'sale_price' => (float)trim($row['RATE_PER_CT'])-1,
+                        'image_link' => $row['IMAGELINK'],
+                        'video_link' => $row['VIDEOLINK'],
+                        'certificate_link' => $row['CERTIFICATELINK'],
+                        'shape' => $row['SHAPE'],
+                        'size' => trim($row['WEIGHT']),
+                        'color' => $row['COLOR'],
+                        'status' => 'publish',
+                        'clarity' => $row['CLARITY'],
+                        'cut' => $row['CUT'],
+                        'polish' => $row['POLISH'],
+                        'symmetry' => $row['SYMMETRY'],
+                        'fluorescence' => $row['FLUORESCENCE'],
+                        'rap_rate' => $row['RAPRATE'],
+                        'amount' => $row['AMOUNT'],
+                        'grading' => $row['GRADING'],
+                        'location' => $row['LOCATION'],
+                        'discount' => trim($row['DISCOUNT%']),
+                        'commission' => trim($row['commission']),
+                        'rate_per_unit_before_commission' => $row['rate_per_unit_before_commission']
+                    ];
+                    $already_exists->update($update_obj);
+                }
             }
         }
-    }
         $updateImportCsvObj = [
             'id'=>$request->id,
             'status'=>'approved',

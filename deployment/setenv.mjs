@@ -74,7 +74,7 @@ await $`sudo echo 'server {
 
         # For API
         location /backend {
-            alias /var/www/chawkbazar-laravel/chawkbazar-api/public;
+            alias /var/www/zweler.com/chawkbazar/chawkbazar-api/public;
             try_files $uri $uri/ @backend;
                 location ~ \\.php$ {
                 include fastcgi_params;
@@ -89,7 +89,7 @@ await $`sudo echo 'server {
 
        # For FrontEnd
        location /{
-            proxy_pass http://localhost:3003;
+            proxy_pass http://localhost:3005;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';
@@ -98,7 +98,7 @@ await $`sudo echo 'server {
         }
 
         location /admin{
-            proxy_pass http://localhost:3002/admin;
+            proxy_pass http://localhost:3004/admin;
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection 'upgrade';

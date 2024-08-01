@@ -11,6 +11,7 @@ import { ShopPaginator, SortOrder } from "@ts-types/generated";
 import TitleWithSort from "@components/ui/title-with-sort";
 import { useCustomerTypesQuery } from "@data/customer-types/use-customer-types.query";
 
+
 type IProps = {
   shops: ShopPaginator | null | undefined;
   onPagination: (current: number) => void;
@@ -19,7 +20,7 @@ type IProps = {
 };
 
 const ShopList = ({ shops, onPagination, onSort, onOrder }: IProps) => {
-  const {data:customer_types} = useCustomerTypesQuery({});
+const {data:customer_types} = useCustomerTypesQuery({});
   const { data, paginatorInfo } = shops! ?? {};
   const { t } = useTranslation();
   const { alignLeft, alignRight } = useIsRTL();
@@ -89,7 +90,7 @@ const ShopList = ({ shops, onPagination, onSort, onOrder }: IProps) => {
       align: "center",
       render: (owner: any) => owner.name,
     },
-    {
+{
       title: "Vendor Type",
       dataIndex: "customer_type",
       key: "customer_type",

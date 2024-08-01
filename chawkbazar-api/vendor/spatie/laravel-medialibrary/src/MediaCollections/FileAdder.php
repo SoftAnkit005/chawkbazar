@@ -107,7 +107,6 @@ class FileAdder
 
             return $this;
         }
-
         if ($file instanceof SymfonyFile) {
             $this->pathToFile = $file->getPath().'/'.$file->getFilename();
             $this->setFileName(pathinfo($file->getFilename(), PATHINFO_BASENAME));
@@ -287,13 +286,13 @@ class FileAdder
             return $this->toMediaCollectionFromTemporaryUpload($collectionName, $diskName, $this->fileName);
         }
 
-        if (! is_file($this->pathToFile)) {
+        if (!is_file($this->pathToFile)) {
             throw FileDoesNotExist::create($this->pathToFile);
         }
 
-        if (filesize($this->pathToFile) > config('media-library.max_file_size')) {
-            throw FileIsTooBig::create($this->pathToFile);
-        }
+        // if (filesize($this->pathToFile) > config('media-library.max_file_size')) {
+        //     throw FileIsTooBig::create($this->pathToFile);
+        // }
 
         $mediaClass = config('media-library.media_model');
         /** @var \Spatie\MediaLibrary\MediaCollections\Models\Media $media */

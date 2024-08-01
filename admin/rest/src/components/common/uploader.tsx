@@ -9,7 +9,7 @@ import { useUploadMutation } from "@data/upload/use-upload.mutation";
 
 const getPreviewImage = (value: any) => {
 	let images: any[] = [];
-	if (value) {
+	if (value) { 
 		images = Array.isArray(value) ? value : [{ ...value }];
 	}
 	return images;
@@ -24,20 +24,15 @@ export default function Uploader({ onChange, value, multiple, name }: any) {
 		maxSize: 10 * 1024 * 1024,
 		onDrop: async (acceptedFiles) => {
 			if (acceptedFiles.length) {
-				// Check the size of the uploaded file(s)
-				const fileSizeInBytes = acceptedFiles[0].size; // Assuming you are checking the size of the first file
+				const fileSizeInBytes = acceptedFiles[0].size; 
                 console.log("File size in bytes:", fileSizeInBytes);
-				if (fileSizeInBytes > ( name === "video" ? 5000 : 600) * 1024) {
-					// File size is larger than 600KB
-					name === "video" ? alert("For the best user experience, please upload an video below 5MB.")
-					: alert("For the best user experience, please upload an image below 600KB.");
-					return; // Stop processing further
-				}
+				
 
 				upload(
 					acceptedFiles, // it will be an array of uploaded attachments
 					{
 						onSuccess: (data) => {
+							console.log(data)
 							let mergedData;
 							if (multiple) {
 								mergedData = files.concat(data);
@@ -55,6 +50,7 @@ export default function Uploader({ onChange, value, multiple, name }: any) {
 			}
 		},
 	});
+	  
 
 	const handleDelete = (image: string) => {
 		const images = files.filter((file) => file.thumbnail !== image);
@@ -110,7 +106,7 @@ export default function Uploader({ onChange, value, multiple, name }: any) {
 			<div
 				{...getRootProps({
 					className:
-						"border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-pointer focus:border-gray-500 focus:outline-none",
+						"border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-center items-center cursor-po	inter focus:border-gray-500 focus:outline-none",
 				})}
 			>
 				<input {...getInputProps()} />

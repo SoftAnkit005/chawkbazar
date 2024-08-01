@@ -4,7 +4,8 @@ import ImportCsv from "@components/ui/import-csv";
 import { useShopQuery } from "@data/shop/use-shop.query";
 import { useImportSolitaireProductsMutation } from "@data/import/use-import-solitaire-products.mutation";
 
-export default function ImportSolitaireProducts() {
+export default function ImportSolitaireProducts({sheetType}) {
+  
   const { t } = useTranslation("common");
   const {
     query: { shop },
@@ -19,6 +20,7 @@ export default function ImportSolitaireProducts() {
       importSolitaireProducts({
         shop_id: shopId,
         csv: acceptedFiles[0],
+        sheet_type : sheetType,
       });
     }
   };

@@ -18,6 +18,7 @@ import { useIsRTL } from "@utils/locals";
 import { useState } from "react";
 import TitleWithSort from "@components/ui/title-with-sort";
 import { useMeQuery } from "@data/user/use-me.query";
+import { toast } from "react-toastify";
 
 export type IProps = {
 	products?: ProductPaginator;
@@ -32,6 +33,7 @@ type SortingObjType = {
 };
 
 const ProductList = ({ products, onPagination, onSort, onOrder }: IProps) => {
+	console.log('products list',products);
 	const { data:me } = useMeQuery();
 	setInterval(()=>{
 		clearInterval(Number(localStorage.getItem("refreshIntervalId")));
@@ -54,6 +56,9 @@ const ProductList = ({ products, onPagination, onSort, onOrder }: IProps) => {
 		column: null,
 	});
 
+	const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  	const [selectAll, setSelectAll] = useState(false);
+
 	const onHeaderClick = (column: string | null) => ({
 		onClick: () => {
 			onSort((currentSortDirection: SortOrder) =>
@@ -69,7 +74,89 @@ const ProductList = ({ products, onPagination, onSort, onOrder }: IProps) => {
 		},
 	});
 
+	const handleSelectAll = () => {
+		if (!selectAll) {
+			let filtereddata = data?.filter((product: Product) => product.status !== "publish").map((i) => i.id)
+
+			console.log(filtereddata)
+			const numberArray: number[] = filtereddata.map(str => parseFloat(str));
+			setSelectedProducts(numberArray || []);
+		  
+		} else {
+		  setSelectedProducts([]);
+		}
+		setSelectAll(!selectAll);
+		
+	  };
+	
+	  const handleSelectProduct = (id: number) => {
+		if (selectedProducts.includes(id)) {
+		  setSelectedProducts(selectedProducts.filter((productId) => productId !== id));
+		} else {
+		  setSelectedProducts([...selectedProducts, id]);
+		}
+	  };
+	  const handleActionButtonClick = async () => {
+		try {
+			const selectedIdsString = selectedProducts.join(",	");
+
+			const formData = new FormData();
+			formData.append('product_id', selectedIdsString);
+
+			const response = await fetch('http://127.0.0.1:8000/multiple-publish-products', {
+			method: 'POST',
+			body: formData,
+			});
+
+			if (!response.ok) {
+			throw new Error('Network response was not ok');
+			}
+
+			const responseData = await response.json();
+			console.log('Response:', responseData);
+			toast.success('Products published successfully');
+			setSelectedProducts([]);
+			setSelectAll(false);
+			setTimeout(() => {
+				window.location.reload();
+			  }, 3000);
+
+		} catch (error) {
+			console.error('Error:', error);
+			toast.error('Something went wrong');
+		}
+	};
+	
+
 	let columns = [
+		{
+			title: (
+			  <input
+				type="checkbox"
+				checked={selectAll}
+				onChange={handleSelectAll}
+			  />
+			),
+			dataIndex: "select",
+			key: "select",
+			align: "center",
+			width: 50,
+			render: (text: any, record: Product) => (
+				(record.status !== "publish")?
+					<input
+						type="checkbox"
+						checked={selectedProducts.includes(record.id)}
+						onChange={() => handleSelectProduct(record.id)}
+					/>
+				:
+					<input
+						type="checkbox"
+						checked={selectedProducts.includes(record.id)}
+						onChange={() => handleSelectProduct(record.id)}
+						disabled
+					/>
+			),
+		  },
 		{
 			title: t("table:table-item-image"),
 			dataIndex: "image",
@@ -262,6 +349,14 @@ const ProductList = ({ products, onPagination, onSort, onOrder }: IProps) => {
 
 	return (
 		<>
+			{selectedProducts.length > 0 && (
+				<div className="border-transparent font-semibold text-light px-3 rounded bg-accent bottom-4 right-4 mb-5 ms-auto" style={{width:'fit-content'}}>
+					<button className="btn btn-primary p-2" onClick={handleActionButtonClick}>
+						Publish All
+					</button>
+				</div>
+			)}
+
 			<div className="rounded overflow-hidden shadow mb-6">
 				<Table
 					/* @ts-ignore */

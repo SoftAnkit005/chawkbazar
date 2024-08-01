@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Marvel\Http\Controllers\TagController;
 use Marvel\Traits\Excludable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -91,6 +92,11 @@ class Product extends Model
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class, 'shop_id');
+    }
+
+    public function balance(): BelongsTo
+    {
+        return $this->belongsTo(Balance::class, 'shop_id');
     }
 
     /**

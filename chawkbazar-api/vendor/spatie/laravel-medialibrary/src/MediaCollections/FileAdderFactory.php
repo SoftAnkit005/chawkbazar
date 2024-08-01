@@ -20,8 +20,7 @@ class FileAdderFactory
     {
         /** @var \Spatie\MediaLibrary\MediaCollections\FileAdder $fileAdder */
         $fileAdder = app(FileAdder::class);
-
-        return $fileAdder
+            return $fileAdder
             ->setSubject($subject)
             ->setFile($file);
     }

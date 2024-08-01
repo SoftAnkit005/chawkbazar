@@ -5,6 +5,7 @@ class Import extends Base<any, any> {
     let formData = new FormData();
     formData.append("csv", variables?.csv);
     formData.append("shop_id", variables?.shop_id);
+    formData.append("sheet_type", variables?.sheet_type);
     const options = {
       headers: {
         "Content-Type": "multipart/form-data",

@@ -24,6 +24,7 @@ class ProductRepository extends BaseRepository
         'status',
         'type.slug' => 'in',
         'categories.slug' => 'in',
+        'type_name' => 'like',
         'shape' => 'in',
         'tags.slug' => 'in',
         'variations.value' => 'in',
@@ -68,6 +69,7 @@ class ProductRepository extends BaseRepository
         'video_link',
         'certificate_link',
         'cert_no',
+        'type_name',
         'shape',
         'size',
         'discount',
@@ -123,7 +125,7 @@ class ProductRepository extends BaseRepository
                 {
                     unset($variation['percent']);
                     unset($variation['diamondWeightInG']);
-                    $product->variation_options()->create($variation);    
+                    $product->variation_options()->create($variation);
                 }
             }
             $product->categories = $product->categories;

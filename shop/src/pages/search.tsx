@@ -9,6 +9,7 @@ import { ROUTES } from "@lib/routes";
 import { useTranslation } from "next-i18next";
 import Divider from "@components/ui/divider";
 import ProductSearchBlock from "@components/product/product-search-block";
+import { NewShopFilters } from "@components/shop/new-filters";
 
 export { getStaticProps } from "@framework/ssr/products-filter";
 
@@ -38,7 +39,8 @@ export default function Shop() {
                   </ActiveLink>
                 </BreadcrumbItems>
               </div>
-              <ShopFilters />
+              <NewShopFilters/>
+              {/* <ShopFilters /> */}
             </StickyBox>
           </div>
 

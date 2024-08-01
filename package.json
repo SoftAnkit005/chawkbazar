@@ -18,17 +18,20 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "husky": "6.0.0",
+    "husky": "^8.0.3",
     "lint-staged": "11.0.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2"
+  },
+  "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "appwrite": "^12.0.0",
+    "caniuse-lite": "^1.0.30001599",
+    "keen-slider": "^6.8.6"
   },
   "lint-staged": {
     "*.{js,ts,tsx,md,css}": [
       "prettier --trailing-comma es5 --write"
     ]
-  },
-"dependencies": {
-  "appwrite": "^12.0.0"
-} 
+  }
 }

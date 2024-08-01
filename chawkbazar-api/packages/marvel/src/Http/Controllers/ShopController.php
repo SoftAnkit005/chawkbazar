@@ -174,7 +174,7 @@ class ShopController extends CoreController
     {
         $id = $request->id;
         $customer_type = $request->customer_type;
-        $vendor_code = $request->vendor_code; 
+        $vendor_code = $request->vendor_code;
         $admin_commission_rate = $request->admin_commission_rate;
         $admin_commission_rate_solitaire = $request->admin_commission_rate_solitaire;
         $markup_type = $request->markup_type;

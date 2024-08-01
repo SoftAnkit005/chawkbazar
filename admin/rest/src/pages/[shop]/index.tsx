@@ -49,6 +49,7 @@ export default function ShopPage() {
   );
   if (loading) return <Loader text={t("common:text-loading")} />;
   if (error) return <ErrorMessage message={error.message} />;
+  console.log('shopdata',data)
   const {
     name,
     is_active,
@@ -155,7 +156,7 @@ export default function ShopPage() {
 
       {/* Mini Dashboard */}
       <div className="order-4 xl:order-3 col-span-12 xl:col-span-9">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 bg-light p-4 rounded h-full">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 bg-light p-4 rounded h-full">
           <div className="space-y-3">
             <h2 className="text-heading text-lg font-semibold">
               {t("common:text-products")}
@@ -234,7 +235,7 @@ export default function ShopPage() {
 
           <div className="space-y-3">
             <h2 className="text-heading text-lg font-semibold">
-              {t("common:text-others")}
+              {'B2B Rate'}
             </h2>
 
             <div className="border border-gray-100">
@@ -248,7 +249,7 @@ export default function ShopPage() {
                     {`${balance?.admin_commission_rate ?? 0} %` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    {t("common:text-commission-rate")}
+                    {'Commission on Stone/Diamond rate in Jwellery B2B'}
                   </p>
                 </div>
               </div>
@@ -262,7 +263,7 @@ export default function ShopPage() {
                     {`${balance?.admin_commission_rate_solitaire ?? 0} %` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    Admin Solitaire Commission Rate
+                    Commission on  Solitaire B2B
                   </p>
                 </div>
                 </div>
@@ -280,7 +281,7 @@ export default function ShopPage() {
                     {`${data?.shop?.wastage_markup ?? 0} ${data?.shop?.markup_type == 'p' ? '%' : ''}` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    {"Wastage Markup"}
+                    {"Wastage Markup B2B"}
                   </p>
                 </div>
               </div>
@@ -298,7 +299,80 @@ export default function ShopPage() {
                     {`${data?.shop?.making_charges_markup ?? 0} ${data?.shop?.markup_type == 'p' ? '%' : ''}` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    {"Making Charges Markup"}
+                    {"Making Charges Markup B2B"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-heading text-lg font-semibold">
+              {'B2C Rate'}
+            </h2>
+
+            <div className="border border-gray-100">
+              <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                  <PercentageIcon width={16} />
+                </div>
+
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${balance?.admin_commission_rate_customer ?? 0} %` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    {'Commission on Stone/Diamond rate in Jwellery B2C'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                  <PercentageIcon width={16} />
+                </div>
+
+              <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${balance?.admin_commission_rate_solitaire_customer ?? 0} %` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    Commission on Solitaire B2C
+                  </p>
+                </div>
+                </div>
+              <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                  {
+                  (data?.shop?.markup_type_customer == 'p') ? 
+                  <PercentageIcon width={16} /> :
+                  <DollarIcon width={12} />
+                  }
+                </div>
+
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${data?.shop?.wastage_markup_customer ?? 0} ${data?.shop?.markup_type_customer == 'p' ? '%' : ''}` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    {"Wastage Markup B2C"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                {
+                (data?.shop?.markup_type_customer == 'p') ? 
+                  <PercentageIcon width={16} /> :
+                  <DollarIcon width={12} />
+                  }
+                </div>
+
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${data?.shop?.making_charges_markup_customer ?? 0} ${data?.shop?.markup_type_customer == 'p' ? '%' : ''}` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    {"Making Charges Markup B2C"}
                   </p>
                 </div>
               </div>

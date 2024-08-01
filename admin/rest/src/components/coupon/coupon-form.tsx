@@ -65,6 +65,7 @@ type IProps = {
   initialValues?: Coupon | null;
 };
 export default function CreateOrUpdateCouponForm({ initialValues }: IProps) {
+  console.log(initialValues);
   const router = useRouter();
   const { t } = useTranslation();
   const {

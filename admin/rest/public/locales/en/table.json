@@ -1,5 +1,4 @@
 {
-  "table-item-menu-builder": "Menu Builder",
   "recent-order-table-title": "Recent Orders",
   "popular-products-table-title": "Popular Products",
   "empty-table-data": "No data found",
@@ -26,6 +25,7 @@
   "table-item-email": "Email",
   "table-item-avatar": "Avatar",
   "table-item-banner": "Banner",
+  "table-item-menu-builder": "Menu Builder",
   "table-item-code": "Code",
   "table-item-amount": "Amount",
   "table-item-active": "Active",
@@ -37,7 +37,7 @@
   "table-item-zip": "ZIP",
   "table-item-global": "Global",
   "table-item-values": "Values",
-  "table-item-group": "Group",
+  "table-item-group": "Product Type",
   "table-item-shop-id": "Shop ID",
   "table-item-shop-name": "Shop Name",
   "table-item-payment-method": "Payment Method",
@@ -47,5 +47,17 @@
   "table-item-total-orders": "Orders",
   "table-item-shop": "Shop",
   "withdraw-table-title": "Recent Withdraws",
-  "table-item-created-at": "Created"
+  "table-item-created-at": "Created",
+  "table-shipping-type": "Shipping Type",
+  "table-item-available_wallet_points": "Available wallet points",
+  "table-item-banner-image": "Banner",
+  "table-item-banner-mobile-image": "Mobile Image",
+  "table-item-banner-desktop-image": "Desktop Image",
+  "table-item-banner-title": "Banner Title",
+  "table-item-banner-type": "Type",
+  "table-item-banner-sub-type": "Banner Type",
+  "table-item-banner-slug": "Banner Slug",
+  "table-item-menu-builder-label": "Label",
+  "table-item-menu-builder-category-path": "Path",
+  "table-item-menu-builder-category-name": "Category Name"
 }

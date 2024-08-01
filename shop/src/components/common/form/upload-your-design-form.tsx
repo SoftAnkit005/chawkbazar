@@ -85,6 +85,7 @@ const UploadYourDesignForm: React.FC = () => {
       noValidate
     >
       <div className="md:w-7/12 self-center lg:w-2/5 2xl:w-6/12 flex flex-col h-full m-2">
+        {/* <FileInput name="gallery" control={control} /> */}
         <Uploader onSetImage={onSetImage} emptyImage={emptyImage} />
       </div>
       <div className="flex flex-col space-y-5 w-full">

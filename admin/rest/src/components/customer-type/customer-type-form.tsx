@@ -29,7 +29,7 @@ export default function CreateOrUpdateCustomerTypeForm({ initialValues }: IProps
   const {
     register,
     handleSubmit,
-    setValue,
+	    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: initialValues ? initialValues : { name: "" },
@@ -38,7 +38,7 @@ export default function CreateOrUpdateCustomerTypeForm({ initialValues }: IProps
   setValue("name",initialValues?.name || '');
   const { mutate: createCustomerType, isLoading: creating } =
     useCreateCustomerTypeMutation();
-    const { mutate: updateCustomerType, isLoading: updating } =
+const { mutate: updateCustomerType, isLoading: updating } =
     useUpdateCustomerTypeMutation();
   const onSubmit = (values: FormValues) => {
     if (!initialValues) {
@@ -58,7 +58,7 @@ export default function CreateOrUpdateCustomerTypeForm({ initialValues }: IProps
         }
       );
     } else {
-      updateCustomerType({
+updateCustomerType({
         variables: {
           id: initialValues.id || '',
           input: {
@@ -102,8 +102,8 @@ export default function CreateOrUpdateCustomerTypeForm({ initialValues }: IProps
             <Input
               label={t("form:input-label-name")}
               {...register("name")}
-              defaultValue={initialValues?.name || ''}
-              error={t(errors.name?.message!)}
+defaultValue={initialValues?.name || ''}        
+      error={t(errors.name?.message!)}
               variant="outline"
               className="mb-5"
             />

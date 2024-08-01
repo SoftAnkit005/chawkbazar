@@ -163,7 +163,7 @@ Route::post('import-solitaire-csv', 'Marvel\Http\Controllers\ProductController@i
 Route::get('imported-csvs', 'Marvel\Http\Controllers\ProductController@importedCsvs');
 Route::get('export-solitaire-products/{shop_id}', 'Marvel\Http\Controllers\ProductController@exportSolitaireProducts');
 Route::get('solitaireindex', 'Marvel\Http\Controllers\ProductController@solitaireindex');
-Route::get('nonsolitaireindex', 'Marvel\Http\Controllers\ProductController@nonsolitaireindex'); 
+Route::get('nonsolitaireindex', 'Marvel\Http\Controllers\ProductController@nonsolitaireindex');
 
 Route::group(
     ['middleware' => ['permission:' . Permission::STORE_OWNER, 'auth:sanctum']],
@@ -200,7 +200,7 @@ Route::group(['middleware' => ['permission:' . Permission::SUPER_ADMIN, 'auth:sa
     ]);
     Route::apiResource('order-status', OrderStatusController::class, [
         'only' => ['store', 'update', 'destroy']
-    ]);   
+    ]);
 
     Route::apiResource('settings', SettingsController::class, [
         'only' => ['store']

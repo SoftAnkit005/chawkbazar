@@ -105,15 +105,15 @@ Route::apiResource('settings', SettingsController::class, [
     'only' => ['index']
 ]);
 
+Route::apiResource('attachments', AttachmentController::class, [
+    'only' => ['store', 'update', 'destroy']
+]);
 
 Route::group(['middleware' => ['can:' . Permission::CUSTOMER, 'auth:sanctum']], function () {
     Route::apiResource('orders', OrderController::class, [
         'only' => ['index', 'show', 'store']
     ]);
     Route::get('orders/tracking-number/{tracking_number}', 'Marvel\Http\Controllers\OrderController@findByTrackingNumber');
-    Route::apiResource('attachments', AttachmentController::class, [
-        'only' => ['store', 'update', 'destroy']
-    ]);
     Route::post('orders/checkout/verify', 'Marvel\Http\Controllers\CheckoutController@verify');
     Route::get('me', 'Marvel\Http\Controllers\UserController@me');
     Route::put('users/{id}', 'Marvel\Http\Controllers\UserController@update');
@@ -150,6 +150,7 @@ Route::group(
     }
 );
 
+Route::post('multiple-publish-products', 'Marvel\Http\Controllers\ProductController@multiplepublish');
 Route::post('import-products', 'Marvel\Http\Controllers\ProductController@importProducts');
 Route::post('import-variation-options', 'Marvel\Http\Controllers\ProductController@importVariationOptions');
 Route::get('export-products/{shop_id}', 'Marvel\Http\Controllers\ProductController@exportProducts');
@@ -163,7 +164,7 @@ Route::post('import-solitaire-csv', 'Marvel\Http\Controllers\ProductController@i
 Route::get('imported-csvs', 'Marvel\Http\Controllers\ProductController@importedCsvs');
 Route::get('export-solitaire-products/{shop_id}', 'Marvel\Http\Controllers\ProductController@exportSolitaireProducts');
 Route::get('solitaireindex', 'Marvel\Http\Controllers\ProductController@solitaireindex');
-Route::get('nonsolitaireindex', 'Marvel\Http\Controllers\ProductController@nonsolitaireindex'); 
+Route::get('nonsolitaireindex', 'Marvel\Http\Controllers\ProductController@nonsolitaireindex');
 
 Route::group(
     ['middleware' => ['permission:' . Permission::STORE_OWNER, 'auth:sanctum']],
@@ -200,7 +201,7 @@ Route::group(['middleware' => ['permission:' . Permission::SUPER_ADMIN, 'auth:sa
     ]);
     Route::apiResource('order-status', OrderStatusController::class, [
         'only' => ['store', 'update', 'destroy']
-    ]);   
+    ]);
 
     Route::apiResource('settings', SettingsController::class, [
         'only' => ['store']

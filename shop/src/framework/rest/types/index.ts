@@ -48,6 +48,7 @@ export type ProductsQueryOptionsType = {
   type?: string;
   text?: string;
   category?: string;
+  type_name?:string;
   shape?: string;
   color?: string;
   clarity?: string;

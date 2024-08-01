@@ -8,6 +8,7 @@ export type ParamsType = {
   category?: string;
   tags?: string;
   variations?: string;
+  type_name?: string;
   shape?:string;
   cut?:string;
   clarity?:string;
@@ -46,6 +47,9 @@ export class CoreApi {
         }
         if (k === 'variations') {
           return `variations.value:${parsedValues[k]};`;
+        }
+        if (k === 'type_name') {
+          return `type_name:${parsedValues[k]};`;
         }
         if (k === 'shape') {
           return `shape:${parsedValues[k]};`;
@@ -94,6 +98,7 @@ export class CoreApi {
       category,
       tags,
       variations,
+      type_name,
       shape,
       cut,
       clarity,
@@ -121,6 +126,7 @@ export class CoreApi {
       category,
       tags,
       variations,
+      type_name,
       shape,
       cut,
       clarity,

@@ -11,6 +11,7 @@ use Marvel\Database\Repositories\AttachmentRepository;
 use Marvel\Exceptions\MarvelException;
 use Marvel\Http\Requests\AttachmentRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Support\Facades\Log;
 
 
 class AttachmentController extends CoreController
@@ -40,24 +41,57 @@ class AttachmentController extends CoreController
      * @return mixed
      * @throws ValidatorException
      */
+    // public function store(AttachmentRequest $request)
+    // {
+    //     $urls = [];
+    //     foreach ($request->attachment as $media) {
+    //         $attachment = new Attachment;
+    //         $attachment->save();
+    //         $attachment->addMedia($media)->toMediaCollection();
+    //         foreach ($attachment->getMedia() as $image) {
+    //             $converted_url = [
+    //                 'thumbnail' => $image->getUrl('thumbnail'),
+    //                 'original' => $image->getUrl(),
+    //                 'id' => $attachment->id
+    //             ];
+    //         }
+    //         $urls[] = $converted_url;
+    //     }
+    //     return $urls;
+    // }
+
     public function store(AttachmentRequest $request)
     {
+
         $urls = [];
-        foreach ($request->attachment as $media) {
-            $attachment = new Attachment;
-            $attachment->save();
-            $attachment->addMedia($media)->toMediaCollection();
-            foreach ($attachment->getMedia() as $image) {
-                $converted_url = [
-                    'thumbnail' => $image->getUrl('thumbnail'),
-                    'original' => $image->getUrl(),
-                    'id' => $attachment->id
-                ];
+        try {
+            foreach ($request->attachment as $media) {
+                $attachment = new Attachment;
+                $attachment->save();
+                $attachment->addMedia($media)->toMediaCollection();
+                
+                foreach ($attachment->getMedia() as $image) {
+                    $converted_url = [
+                        'thumbnail' => $image->getUrl('thumbnail'),
+                        'original' => $image->getUrl(),
+                        'id' => $attachment->id
+                    ];
+                }
+                $urls[] = $converted_url;
             }
-            $urls[] = $converted_url;
+            return response()->json($urls, 200);
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('Error uploading attachment: '.$e->getMessage());
+
+            // Return a meaningful error response to the client
+            return response()->json([
+                'message' => 'An error occurred while uploading the attachment.',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        return $urls;
     }
+
 
     /**
      * Display the specified resource.

@@ -172,14 +172,21 @@ class ShopController extends CoreController
 
     public function approveShop(Request $request)
     {
+
         $id = $request->id;
         $customer_type = $request->customer_type;
-        $vendor_code = $request->vendor_code; 
+        $vendor_code = $request->vendor_code;
         $admin_commission_rate = $request->admin_commission_rate;
         $admin_commission_rate_solitaire = $request->admin_commission_rate_solitaire;
+        $admin_commission_rate_customer = $request->admin_commission_rate_customer;
+        $admin_commission_rate_solitaire_customer = $request->admin_commission_rate_solitaire_customer;
         $markup_type = $request->markup_type;
         $making_charges_markup = $request->making_charges_markup;
         $wastage_markup = $request->wastage_markup;
+        $markup_type_customer = $request->markup_type_customer;
+        $making_charges_markup_customer = $request->making_charges_markup_customer;
+        $wastage_markup_customer = $request->wastage_markup_customer;
+
         try {
             $shop = $this->repository->findOrFail($id);
         } catch (\Exception $e) {
@@ -190,11 +197,16 @@ class ShopController extends CoreController
         $shop->markup_type = $markup_type;
         $shop->making_charges_markup = $making_charges_markup;
         $shop->wastage_markup = $wastage_markup;
+        $shop->markup_type_customer = $markup_type_customer;
+        $shop->making_charges_markup_customer = $making_charges_markup_customer;
+        $shop->wastage_markup_customer = $wastage_markup_customer;
         $shop->vendor_code = $vendor_code;
         $shop->save();
         $balance = Balance::firstOrNew(['shop_id' => $id]);
         $balance->admin_commission_rate = $admin_commission_rate;
         $balance->admin_commission_rate_solitaire = $admin_commission_rate_solitaire;
+        $balance->admin_commission_rate_customer = $admin_commission_rate_customer;
+        $balance->admin_commission_rate_solitaire_customer = $admin_commission_rate_solitaire_customer;
         $balance->save();
         if(isset($shop) && $shop->settings["contact"]){
             $url = 'http://api.ask4sms.in/sms/1/text/query?username=zweler&password=Zweler@321&from=ZWEVEN&to=91'.str_replace('+91', '',$shop->settings["contact"]).'&text=Hello%20'.str_replace(' ', '%20', $shop->name).'%2C%0ACongratulations%21%20Your%20manufacturer%20account%20on%20Zweler%20has%20been%20approved.%20You%20can%20now%20start%20listing%20your%20exquisite%20jewellery%20products%20and%20enjoy%20the%20multiple%20benefits%20of%20our%20platform.%20Reach%20a%20wider%20network%20of%20retailers%20and%20grow%20your%20business%20with%20us%21%0ABest%20regards%2C%0ATeam%20Zweler%20-ZWELER&indiaDltContentTemplateId=1107169632514985043&indiaDltPrincipalEntityId=1101660960000072501';
