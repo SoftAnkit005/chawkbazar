@@ -1,0 +1,92 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Woman",
+      "slug": "woman",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/woman.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/woman.jpg"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Man",
+      "slug": "man",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/man.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/man.jpg"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Watch",
+      "slug": "watch",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/watch.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/watch.jpg"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Kids",
+      "slug": "kids",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/kid.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/kid.jpg"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Sports",
+      "slug": "sports",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/sports.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/sports.jpg"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Sunglass",
+      "slug": "sunglass",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/sunglass.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/sunglass.jpg"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Bags",
+      "slug": "bags",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/bags.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/bags.jpg"
+      }
+    },
+    {
+      "id": 8,
+      "name": "Sneakers",
+      "slug": "sneakers",
+      "productCount": 20,
+      "image": {
+        "id": 1,
+        "thumbnail": "https://zweler.com/admin/assets/images/category/sneakers.jpg",
+        "original": "https://zweler.com/admin/assets/images/category/sneakers.jpg"
+      }
+    }
+  ]
+}

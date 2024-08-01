@@ -1,0 +1,18 @@
+{
+  "name": "Zweler Vendor",
+  "short_name": "Zweler Vendor",
+  "theme_color": "#ffffff",
+  "background_color": "#004740",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/admin",
+  "start_url": "/admin",
+  "icons": [
+    {
+      "src": "icons/logo.webp",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "splash_pages": null
+}
