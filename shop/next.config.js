@@ -10,10 +10,9 @@ module.exports = withPWA({
   i18n,
   images: {
     domains: [
-      "zweler.com",
-      "zweler.com/admin",
-      "http://localhost:8000",
       "zweler.com/backend",
+      "zweler.com/admin",
+      "zweler.com",
       "127.0.0.1",
       "localhost",
       "googleusercontent.com",
