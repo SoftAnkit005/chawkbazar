@@ -63,7 +63,7 @@ export default function MobileMenu() {
 							{t(`${data.label}`)}
 						</span>
 					</Link>
-					{hasSubMenu && (
+					{hasSubMenu && data.label !== "Solitaires" && (
 						<div
 							className="cursor-pointer w-16 md:w-20 h-8 text-lg flex-shrink-0 flex items-center justify-center"
 							onClick={() => handleArrowClick(menuName)}
@@ -76,7 +76,7 @@ export default function MobileMenu() {
 						</div>
 					)}
 				</div>
-				{hasSubMenu && (
+				{hasSubMenu && data.label !== "Solitaires" && (
 					<SubMenu
 						dept={dept}
 						data={data.subMenu}

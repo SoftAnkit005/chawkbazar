@@ -27,13 +27,15 @@ const SearchTopBar: React.FC<Props> = ({ searchResultCount }) => {
       <Text variant="pageHeading" className="hidden lg:inline-flex pb-1">
         {isEmpty(query) ? t("text-shop") : t("text-search-result")}
       </Text>
-      <button
-        className="lg:hidden text-heading text-sm px-4 py-2 font-semibold border border-gray-300 rounded-md flex items-center transition duration-200 ease-in-out focus:outline-none hover:bg-gray-200"
-        onClick={openFilter}
-      >
-        <FilterIcon />
-        <span className="ltr:pl-2.5 rtl:pr-2.5">{t("text-filters")}</span>
-      </button>
+      {query?.category === "solitaire" ? <div></div> : 
+        <button
+          className="lg:hidden text-heading text-sm px-4 py-2 font-semibold border border-gray-300 rounded-md flex items-center transition duration-200 ease-in-out focus:outline-none hover:bg-gray-200"
+          onClick={openFilter}
+        >
+          <FilterIcon />
+          <span className="ltr:pl-2.5 rtl:pr-2.5">{t("text-filters")}</span>
+        </button>
+      }
       <div className="flex items-center justify-end">
         <div className="flex-shrink-0 text-body text-xs md:text-sm leading-4 ltr:pr-4 rtl:pl-4 ltr:md:mr-6 rtl:md:ml-6 ltr:pl-2 rtl:pr-2 hidden lg:block">
           {searchResultCount ?? 0} {t("text-items")}

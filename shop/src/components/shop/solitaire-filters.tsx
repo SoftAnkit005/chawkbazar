@@ -120,11 +120,11 @@ export const SolitaireFilters: React.FC = () => {
 				</div>
 				<div className="navigation-wrapper relative">
 					<div ref={sliderRef} className="keen-slider">
-						<div className="keen-slider__slide number-slide1"><img src="https://admin.diamondxe.com/storage/banner/KA1MgFuA4c1wfFSXbbwCEOS0mTYUq1quJpNj7MPf.webp" alt="" /></div>
-						<div className="keen-slider__slide number-slide2"><img src="https://admin.diamondxe.com/storage/banner/5TjJwyU5YpuRSyCEiNmn6JhhZgbVLXEQIHZJUhe5.webp" alt="" /></div>
-						<div className="keen-slider__slide number-slide3"><img src="https://admin.diamondxe.com/storage/banner/iiNBTHa4C1YqXMsuDPUrp1C5RZlt4EutuQTQOAJr.webp" alt="" /></div>
-						<div className="keen-slider__slide number-slide4"><img src="https://admin.diamondxe.com/storage/banner/8J9FOnDse4oYlUQ0ryPEQT38NghxTOd7R8RxDgQc.webp" alt="" /></div>
-						<div className="keen-slider__slide number-slide5"><img src="https://admin.diamondxe.com/storage/banner/75dY4J5vU9nwrQE4hk0xmddiiUTfhvvRvpkHhtib.webp" alt="" /></div>
+						<div className="keen-slider__slide number-slide1"><img className="object-cover h-[600px] w-full" src="https://images.wallpaperscraft.com/image/single/ring_diamond_jewelry_113693_1920x1080.jpg" alt="" /></div>
+						<div className="keen-slider__slide number-slide2"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/870/702/430/macro-simple-background-diamonds-jewels-wallpaper-50908589aff60e73484ff756abe6e428.jpg" alt="" /></div>
+						<div className="keen-slider__slide number-slide3"><img className="object-cover h-[600px] w-full" src="https://c1.wallpaperflare.com/path/386/546/528/jewelry-engagement-wedding-jewelry-band-romance-luxury-f27735fb4ec80b4e2a9ffa95c68ac307.jpg" alt="" /></div>
+						<div className="keen-slider__slide number-slide4"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/137/713/93/engagement-diamond-ring-silver-and-white-diamond-embellished-black-gemstone-wedding-ring-wallpaper-727162401d36ce0bca1872e550d83982.jpg" alt="" /></div>
+						<div className="keen-slider__slide number-slide5"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/914/606/493/ring-gold-diamond-visa-wallpaper-27df2a8123e4654c4198a3b04c12109a.jpg" alt="" /></div>
 					</div>
 					<>
 						<Arrow left onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev() } disabled={currentSlide === -1} />

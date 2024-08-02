@@ -628,6 +628,7 @@ render: (size:number) => (
 </div>
 	        </div>,
 						rowExpandable: (record: any) => record,
+            expandRowByClick:true
 					}}
 				/>
 			</div>
