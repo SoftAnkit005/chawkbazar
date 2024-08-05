@@ -176,12 +176,17 @@ class ProductController extends CoreController
      */
     public function update(ProductUpdateRequest $request, $id)
     {
-        $request->id = $id;
-        echo '<pre>';
-        print_r($request->all());
-        echo '</pre>';
-        die;
-        return $this->updateProduct($request);
+        // $request->id = $id;
+        // echo '<pre>';
+        // print_r($request->all());
+        // echo '</pre>';
+        // die;
+        // return $this->updateProduct($request);
+         if ($this->repository->hasPermission($request->user(), $request->shop_id)) {
+            return $this->repository->updateProduct($request,$id);
+        } else {
+            throw new MarvelException(config('shop.app_notice_domain') . 'ERROR.NOT_AUTHORIZED');
+        }
     }
 
     public function updateProduct(Request $request)

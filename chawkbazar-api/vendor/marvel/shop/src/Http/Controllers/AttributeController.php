@@ -110,6 +110,11 @@ class AttributeController extends CoreController
 
     public function downloadSolitaireSampleFile(Request $request)
     {
+        // $path = storage_path() . '/app/public/csv-files/SOLITAIRE_SAMPLE_ATTRIBUTES.csv';
+        // echo '<pre>';
+        // print_r($path);
+        // echo '</pre>';
+        // die;
         return response()->download(storage_path() . '/app/public/csv-files/SOLITAIRE_SAMPLE_ATTRIBUTES.csv');
     }
 
