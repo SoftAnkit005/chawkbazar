@@ -19,36 +19,38 @@ export default function Shop() {
   const router = useRouter();
   const { pathname, query } = router;
   const { t } = useTranslation("common");
-
-  console.log('query: ', query);
-
   return (
     <>
       <Divider className="mb-2" />
       <Container>
         <div className={`pt-8 pb-16 lg:pb-20`}>
-          <div className="flex-shrink-0 hidden lg:block w-full">
-            <StickyBox offsetTop={50} offsetBottom={20}>
-              <div className="pb-7">
-                <BreadcrumbItems separator="/">
-                  <ActiveLink
-                    href={"/"}
-                    activeClassName="font-semibold text-heading"
-                  >
-                    <a>{t("breadcrumb-home")}</a>
-                  </ActiveLink>
-                  <ActiveLink
-                    href={ROUTES.SEARCH}
-                    activeClassName="font-semibold text-heading"
-                  >
-                    <a className="capitalize">{t("breadcrumb-search")}</a>
-                  </ActiveLink>
-                </BreadcrumbItems>
-              </div>
-              <NewShopFilters/>
-              {/* <ShopFilters /> */}
-            </StickyBox>
-          </div>
+          {query?.category === "solitaire" ?
+          <></>
+          :
+          <>
+            <div className="flex-shrink-0 hidden lg:block w-full">
+              <StickyBox offsetTop={50} offsetBottom={20}>
+                <div className="pb-7">
+                  <BreadcrumbItems separator="/">
+                    <ActiveLink
+                      href={"/"}
+                      activeClassName="font-semibold text-heading"
+                    >
+                      <a>{t("breadcrumb-home")}</a>
+                    </ActiveLink>
+                    <ActiveLink
+                      href={ROUTES.SEARCH}
+                      activeClassName="font-semibold text-heading"
+                    >
+                      <a className="capitalize">{t("breadcrumb-search")}</a>
+                    </ActiveLink>
+                  </BreadcrumbItems>
+                </div>
+                <NewShopFilters/>
+                {/* <ShopFilters /> */}
+              </StickyBox>
+            </div>
+          </> }
 
           <div className="w-full mt-5">
             {query?.category === "solitaire" ? <SolitaireFilters/> : <></> }

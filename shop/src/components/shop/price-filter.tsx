@@ -73,12 +73,19 @@ export const PriceFilter = () => {
 
 	return (
 		<div className="text-center border border-gray-300 border-t-0 p-5 col-span-6 rounded-b-3xl lg:rounded-bl-none">
+			<style>
+				{`
+					.price-select:focus{
+						border: 2px solid black;
+					}
+				`}
+			</style>
 			<div className="block mx-auto rounded-lg">
 				<div className="flex flex-col space-y-4">
 					<div className="flex items-center w-full lg:w-1/2 m-auto">
 						<h3 className="text-black text-base font-bold mr-3"> {t("text-price")} </h3>
 						<select 
-							className="px-4 h-10 flex items-center w-full rounded text-black text-sm focus:outline-none focus:ring-0 border-none bg-gray-100"
+							className="px-4 h-10 flex price-select items-center w-full rounded text-black text-sm focus:outline-none focus:ring-0 border-none bg-gray-100 focus:border-black"
 							onChange={handleItemClick}>
 								<option></option>
 								{

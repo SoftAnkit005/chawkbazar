@@ -151,17 +151,17 @@ function addToCart(product:any) {
 
   const columns = [
     {
-			title:"Style Code",
+			title:"STOCK ID",
 			className: "cursor-pointer",
 			dataIndex: "stylecode",
 			key: "stylecode",
 			align: alignLeft,
-			width: 90,
+			width: 150,
 			ellipsis: true,
 //			onHeaderCell: () => onHeaderClick("stylecode"),
 		},
     {
-			title:"Sheet Type",
+			title:"TYPE",
 			className: "cursor-pointer",
 			dataIndex: "type_name",
 			key: "type_name",
@@ -171,7 +171,7 @@ function addToCart(product:any) {
 //			onHeaderCell: () => onHeaderClick("stylecode"),
 		},
 		{
-			title:"Shape",
+			title:"SHAPE",
     	className: "cursor-pointer",
 			dataIndex: "shape",
 			key: "shape",
@@ -181,14 +181,12 @@ function addToCart(product:any) {
 //			onHeaderCell: () => onHeaderClick("shape"),
 		},
 		{
-			title: 
-						"Wt"
-,
+			title: "WT",
 			className: "cursor-pointer",
 			dataIndex: "size",
 			key: "size",
 			align: alignLeft,
-			width: 90,
+			width: 60,
 			ellipsis: true,
 //			onHeaderCell: () => onHeaderClick("size"),
 render: (size:number) => (
@@ -196,37 +194,32 @@ render: (size:number) => (
 ),
 		},
 		{
-			title: 
-						"Color"
-					,
+			title: "COLOR" ,
 			className: "cursor-pointer",
 			dataIndex: "color",
 			key: "color",
 			align: alignLeft,
-			width: 90,
+			width: 60,
 			ellipsis: true,
 		//	onHeaderCell: () => onHeaderClick("color"),
 		},
 		{
-			title: 
-						"Clarity"
-				,
+			title: "CLARITY" ,
 			className: "cursor-pointer",
 			dataIndex: "clarity",
 			key: "clarity",
 			align: alignLeft,
-			width: 90,
+			width: 60,
 			ellipsis: true,
 		//	onHeaderCell: () => onHeaderClick("clarity"),
 		},
 		{
-			title: "Cut"
-					,
+			title: "CUT" ,
 			className: "cursor-pointer",
 			dataIndex: "cut",
 			key: "cut",
 			align: alignLeft,
-			width: 90,
+			width: 60,
 			ellipsis: true,
 			//onHeaderCell: () => onHeaderClick("cut"),
       render: (cut:string) => (
@@ -234,13 +227,12 @@ render: (size:number) => (
       ),
     },
 		{
-			title:	"Polish"
-					,
+			title:	"POLISH" ,
 			className: "cursor-pointer",
 			dataIndex: "polish",
 			key: "polish",
 			align: alignLeft,
-			width: 90,
+			width: 60,
 			ellipsis: true,
 			//onHeaderCell: () => onHeaderClick("polish"),
       render: (polish:string) => (
@@ -248,8 +240,7 @@ render: (size:number) => (
       ),
 		},
 		{
-			title: "Symmetry"
-					,
+			title: "SYMMETRY",
 			className: "cursor-pointer",
 			dataIndex: "symmetry",
 			key: "symmetry",
@@ -262,8 +253,7 @@ render: (size:number) => (
     ),	
   },
 		{
-			title: "Fluorescence"
-					,
+			title: "FLUO",
 			className: "cursor-pointer",
 			dataIndex: "fluorescence",
 			key: "fluorescence",
@@ -276,8 +266,7 @@ render: (size:number) => (
     ),		
   },
 		{
-			title: "Lab"
-					,
+			title: "LAB",
 			className: "cursor-pointer",
 			dataIndex: "grading",
 			key: "grading",
@@ -287,7 +276,7 @@ render: (size:number) => (
 	//		onHeaderCell: () => onHeaderClick("grading"),
 		},
 		{
-			title: "Location",
+			title: "LOCATION",
 			className: "cursor-pointer",
 			dataIndex: "location",
 			key: "location",
@@ -297,21 +286,21 @@ render: (size:number) => (
 			//onHeaderCell: () => onHeaderClick("location"),
 		},
     {
-      title: "Rap Rate",
+      title: "RAP RATE",
       className: "cursor-pointer",
       dataIndex: "rap_rate",
       key: "rap_rate",
-      align: "right",
+      align: alignLeft,
       width: 90,
       ellipsis: true,
       
     },
 		{
-      title: "Discount %",
+      title: "DISC %",
       className: "cursor-pointer",
       dataIndex: "discount",
       key: "discount",
-      align: "right",
+      align: alignLeft,
       width: 90,
       ellipsis: true,
       render: (discount: number, record: any) => {
@@ -331,12 +320,12 @@ render: (size:number) => (
       },
     },
 		{
-			title: "Rate Per Ct",
+			title: "RATE/CT",
 			className: "cursor-pointer",
 			dataIndex: "rate_per_unit",
 			key: "rate_per_unit",
-			align: alignRight,
-			width: 90,
+			align: alignLeft,
+			width: 80,
 			ellipsis: true,
 			render: (rate_per_unit:number,record: any) => (
         
@@ -345,7 +334,7 @@ render: (size:number) => (
 			
 		},
 		{
-			title: "Amount",
+			title: "AMOUNT",
 			className: "cursor-pointer",
 			dataIndex: "price",
 			key: "price",
@@ -353,7 +342,6 @@ render: (size:number) => (
 			width: 90,
 //			onHeaderCell: () => onHeaderClick("price"),
 			render: (value: number, record: any) => {
-        console.log('val',record)
         value = (!customer_type || customer_type == 1 ? record.rate_per_unit_customer * record.size : record.rate_per_unit * record.size);
 					return (
 						<span className="whitespace-nowrap" title={value.toFixed(0)}>
@@ -366,12 +354,16 @@ render: (size:number) => (
 
   return (
     <>
-      <div className="rounded overflow-hidden shadow mb-6" style={{width:"103%",margin:"-20px",padding:"0px"}}>
+      <div className="rounded overflow-hidden shadow mb-6">
 				<style>
           {
             `
             th, td{
               font-size:12px !important;
+            }
+            .rc-table thead.rc-table-thead th, .rc-table tr.rc-table-row td {
+                padding-left: .5rem;
+                padding-right: .5rem;
             }
             `
           }
@@ -388,12 +380,11 @@ render: (size:number) => (
             <div style={{width:"100%"}} className="col-span-full lg:col-span-5 xl:col-span-5 row-span-full lg:row-auto grid grid-cols-4 gap-2 md:gap-3.5 lg:gap-5 xl:gap-7">
               <div className="my-auto mx-auto col-span-1">
               <img src={data?.image_link || siteSettings?.product?.placeholderImage()}
-              width={300}
-              height={300}
-              alt={data?.name}
-          className={cn("bg-gray-300 object-cover ltr:rounded-l-md rtl:rounded-r-md ltr:rounded-l-md rtl:rounded-r-md transition duration-200 ease-linear transform group-hover:scale-105")}
-
-></img>
+                  width={300}
+                  height={300}
+                  alt={data?.name}
+                  className={cn("bg-gray-300 object-cover ltr:rounded-l-md rtl:rounded-r-md ltr:rounded-l-md rtl:rounded-r-md transition duration-200 ease-linear transform group-hover:scale-105")}
+              ></img>
               </div>
               <div className="my-auto mx-auto col-span-1">
               {
@@ -628,7 +619,7 @@ render: (size:number) => (
 </div>
 	        </div>,
 						rowExpandable: (record: any) => record,
-            expandRowByClick:true
+            expandRowByClick:true,
 					}}
 				/>
 			</div>

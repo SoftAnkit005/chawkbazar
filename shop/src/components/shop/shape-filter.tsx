@@ -277,10 +277,10 @@ export const ShapeFilter = ({changedFilter}: Props) => {
 			"(min-width: 600px)": {
                 slides: { perView: 6, spacing: 10 },
             },
-            "(min-width: 1000px)": {
+            "(min-width: 1350px)": {
                 slides: { perView: 8, spacing: 10 },
             },
-			"(min-width: 1500px)": {
+			"(min-width: 1750px)": {
                 slides: { perView: 10, spacing: 10 },
             },
             },
@@ -349,10 +349,10 @@ export const ShapeFilter = ({changedFilter}: Props) => {
 					}
 				`}
 			</style>
-			<div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center">
+			<div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center col-span-2">
 				<p className="text-black text-base font-bold">Shape</p>
 			</div>
-			<div className="text-center border border-gray-300 border-t-0 py-5 col-span-11">
+			<div className="text-center border border-gray-300 border-t-0 py-5 col-span-10">
 				<div className="navigation-wrapper relative">
 					<div className="w-[90%] m-auto">
 						<div ref={ref} className="keen-slider w-[90%] h-[110px]">

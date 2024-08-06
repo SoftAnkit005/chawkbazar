@@ -37,6 +37,7 @@ export const BreadcrumbItems = (props: any) => {
 
 	children = children.reduce((acc: any, child: string, index: number) => {
 		const notLast = index < lastIndex;
+
 		if (notLast) {
 			acc.push(
 				child,
@@ -49,7 +50,7 @@ export const BreadcrumbItems = (props: any) => {
 		}
 		return acc;
 	}, []);
-
+	
 	return (
 		<div className="chawkbazarBreadcrumb flex items-center">
 			<ol className="flex items-center w-full overflow-hidden">{children}</ol>

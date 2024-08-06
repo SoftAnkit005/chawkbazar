@@ -143,6 +143,7 @@ export const LocationFilter = () => {
         );
     }
 
+    
     const Option = ({ children, ...props }: any) => (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <label style={{ fontSize: '12px', marginRight: '5px', marginLeft: '10px' }}>{children}</label>
@@ -178,7 +179,7 @@ export const LocationFilter = () => {
         <>
             <style>
                 {`
-                    .css-13cymwt-control, .css-t3ipsp-control{
+                    .css-13cymwt-control, .css-t3ipsp-control, css-1s2u09g-control{
                         background-color: rgb(241 241 241) !important;
                         color: #000 !important;
                         border:none !important;
@@ -186,13 +187,29 @@ export const LocationFilter = () => {
                     .css-1hb7zxy-IndicatorsContainer span{
                         display: none !important;
                     }
+                    .css-1s2u09g-control{
+                        background-color: rgb(241 241 241) !important;
+                        border:none !important;
+                        color: #000 !important;
+                    }
+                    .css-tlfecz-indicatorContainer{
+                        color: #000 !important;
+                    }
+                    .css-1pahdxg-control:hover{
+                        border-color: #000 !important;
+                        background-color: hsl(0, 0%, 100%);
+                    }
+                    .css-1pahdxg-control{
+                        box-shadow: 0 0 0 1px #000;
+                        border-color: #000 !important;
+                    }
                    
                 `}
             </style>
             <div className="text-center border border-gray-300 border-t-0 p-5 col-span-6 lg:rounded-bl-3xl">
                 <div className="block mx-auto rounded-lg">
                     <div className="flex flex-col space-y-4">
-                        <div className="flex items-center w-full lg:w-1/2 m-auto">
+                        <div className="flex items-center w-full lg:w-3/5 m-auto">
                             <h3 className="text-black text-base font-bold mr-3"> {"Location"} </h3>
                             <ReactSelect
                                 className="text-sm rounded-lg w-full"
@@ -204,7 +221,7 @@ export const LocationFilter = () => {
                                     Option,
                                     IndicatorSeparator: () => (
                                         <span style={customStyles.customIndicatorSeparator}>
-                                            <span style={customStyles.selectText}>Select</span>
+                                            {/* <span style={customStyles.selectText}>Select</span> */}
                                         </span>
                                     )
                                 }}

@@ -20,36 +20,9 @@ import useUser from "@framework/auth/use-user";
 import { useWindowSize } from "@utils/use-window-size";
 import header_pattern from "../../../public/assets/images/filter-images/header_pattern.png"
 import Image from "next/image";
-import { useState } from "react";
-import { useKeenSlider } from "keen-slider/react";
-import "keen-slider/keen-slider.min.css"
+import React , { useState } from "react";
+import SolitaireFilterCarousel from "./solitaire-filter-carousel";
 
-
-
-function Arrow(props: {
-	disabled: boolean
-	left?: boolean
-	onClick: (e: any) => void
-  }) {
-	const disabled = props.disabled ? " arrow--disabled" : ""
-	return (
-	  <svg
-		onClick={props.onClick}
-		className={`arrow ${
-		  props.left ? "arrow--left" : "arrow--right"
-		} ${disabled}`}
-		xmlns="http://www.w3.org/2000/svg"
-		viewBox="0 0 24 24"
-	  >
-		{props.left && (
-		  <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
-		)}
-		{!props.left && (
-		  <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
-		)}
-	  </svg>
-	)
-  }
 
 export const SolitaireFilters: React.FC = () => {
 	const router = useRouter();
@@ -69,41 +42,6 @@ export const SolitaireFilters: React.FC = () => {
 	const filterchange = (val:string) => {
 		setchangedFilter(val);
 	}
-
-	const [currentSlide, setCurrentSlide] = useState(0)
-	const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
-		{ loop: true, },
-		[
-		  (slider) => {
-			let timeout: ReturnType<typeof setTimeout>
-			let mouseOver = false
-			function clearNextTimeout() {
-			  clearTimeout(timeout)
-			}
-			function nextTimeout() {
-			  clearTimeout(timeout)
-			  if (mouseOver) return
-			  timeout = setTimeout(() => {
-				slider.next()
-			  }, 2000)
-			}
-			slider.on("created", () => {
-			  slider.container.addEventListener("mouseover", () => {
-				mouseOver = true
-				clearNextTimeout()
-			  })
-			  slider.container.addEventListener("mouseout", () => {
-				mouseOver = false
-				nextTimeout()
-			  })
-			  nextTimeout()
-			})
-			slider.on("dragStarted", clearNextTimeout)
-			slider.on("animationEnded", nextTimeout)
-			slider.on("updated", nextTimeout)
-		  },
-		]
-	  )
 	return (
 		<>
 			<div className={"pt-1 " + ((deviceWidth > 1024 && query?.category !== "solitaire") ? "flex" : "flex flex-col")}>
@@ -118,27 +56,15 @@ export const SolitaireFilters: React.FC = () => {
 						))}
 					</div>
 				</div>
-				<div className="navigation-wrapper relative">
-					<div ref={sliderRef} className="keen-slider">
-						<div className="keen-slider__slide number-slide1"><img className="object-cover h-[600px] w-full" src="https://images.wallpaperscraft.com/image/single/ring_diamond_jewelry_113693_1920x1080.jpg" alt="" /></div>
-						<div className="keen-slider__slide number-slide2"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/870/702/430/macro-simple-background-diamonds-jewels-wallpaper-50908589aff60e73484ff756abe6e428.jpg" alt="" /></div>
-						<div className="keen-slider__slide number-slide3"><img className="object-cover h-[600px] w-full" src="https://c1.wallpaperflare.com/path/386/546/528/jewelry-engagement-wedding-jewelry-band-romance-luxury-f27735fb4ec80b4e2a9ffa95c68ac307.jpg" alt="" /></div>
-						<div className="keen-slider__slide number-slide4"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/137/713/93/engagement-diamond-ring-silver-and-white-diamond-embellished-black-gemstone-wedding-ring-wallpaper-727162401d36ce0bca1872e550d83982.jpg" alt="" /></div>
-						<div className="keen-slider__slide number-slide5"><img className="object-cover h-[600px] w-full" src="https://r4.wallpaperflare.com/wallpaper/914/606/493/ring-gold-diamond-visa-wallpaper-27df2a8123e4654c4198a3b04c12109a.jpg" alt="" /></div>
-					</div>
-					<>
-						<Arrow left onClick={(e: any) => e.stopPropagation() || instanceRef.current?.prev() } disabled={currentSlide === -1} />
-						<Arrow onClick={(e: any) => e.stopPropagation() || instanceRef.current?.next() } disabled={ currentSlide === -1 } />
-					</>
-				</div>
-				<div className="w-full lg:w-10/12 2xl:w-9/12 my-5 m-auto order-1">
+				<SolitaireFilterCarousel/>
+				<div className="w-full lg:w-10/12 my-5 m-auto order-1">
 					{/* <h2 className="text-center text-black my-5 text-base">Quick Search Solitaire Diamonds</h2> */}
 					<div className="text-center my-5">
 						<Image src={header_pattern} />
 					</div>
 					<div className="rounded-3xl">
 						<div className="bg-[#24182E] text-white p-4 rounded-t-3xl text-center">
-							<h2>Search Over <span className="text-[#CA1F3F] fw-bold">1,000,000</span> Diamonds from Thousands of Verified Suppliers Worldwide!</h2>
+							<h2>Your journey to the finest <span className="text-[#CA1F3F] fw-bold">Solitaires </span> from the leading manufacturers.</h2>
 						</div>
 						<div>
 							<div className="lg:grid lg:grid-cols-12">

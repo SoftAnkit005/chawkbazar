@@ -8,15 +8,12 @@ const WidgetRight: FC = () => {
   const settings = useSettings();
 
   return (
-    <div className="px-0 max-w-5xl mx-auto space-y-4">
-
+    <div>
       <a href="https://play.google.com/store/apps/details?id=com.aviral.zweler&hl=en-IN" target="_blank" rel="noopener noreferrer">
-      <img
-          src="../assets/images/footerSide.jpg"
-          alt="PlayStore Image"          
-          className="image-class" 
-          style={{ maxWidth: "100%", maxHeight: "100%" }}
-        />
+        <img src="../assets/images/play-store.png" alt="PlayStore Image" className="image-class h-[40px]" />
+      </a>
+      <a href="https://apps.apple.com/in/app/zweler/id6461119914" target="_blank" rel="noopener noreferrer">
+        <img src="../assets/images/app-store.png" alt="AppStore Image" className="image-class h-[40px] mt-3" />
       </a>
     </div>
   );

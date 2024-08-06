@@ -231,10 +231,10 @@ export const ClarityFilter = ({changedFilter}: Props) => {
                     </div>
                 </div>
             </div> */}
-            <div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center">
+            <div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center col-span-2">
                 <p className="text-black text-base font-bold">Clarity</p>
             </div>
-            <div className="text-center border border-gray-300 border-t-0 py-5 col-span-11">
+            <div className="text-center border border-gray-300 border-t-0 py-5 col-span-10">
                 <div className="navigation-wrapper relative">
                     <div className="w-[90%] m-auto">
                         <div ref={ref} className="keen-slider">

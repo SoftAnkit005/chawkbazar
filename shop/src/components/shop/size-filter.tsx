@@ -120,16 +120,16 @@ export const SizeFilter = () => {
 	
     return (
         <>
-            <div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center">
+            <div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center col-span-2">
                 <p className="text-black text-base font-bold">Weight</p>
             </div>
-            <div className="text-center border border-gray-300 border-t-0 py-5 col-span-11">
+            <div className="text-center border border-gray-300 border-t-0 py-5 col-span-10">
                 <div className="w-[90%] m-auto">
                     <div className="flex items-center justify-center lg:w-1/2">
                         <p className="font-semibold text-sm my-0 mr-5">From</p>
                         <input
                             type="text"
-                            className="px-4 my-1 h-10 flex items-center w-2/5 rounded-lg appearance-none transition duration-300 ease-in-out text-heading text-sm my-0 focus:outline-none focus:ring-0 border border-border-base focus:border-accent bg-gray-100"
+                            className="px-4 my-1 h-10 flex items-center w-2/5 rounded-lg appearance-none transition duration-300 ease-in-out text-heading text-sm my-0 focus:ring-0 border border-border-base focus:border-accent bg-gray-100"
                             value={weightFrom}
                             onChange={handleFromChange}
                             onKeyPress={handleApplyRange}
@@ -137,7 +137,7 @@ export const SizeFilter = () => {
                         <p className="font-semibold text-sm my-0 mx-5">To</p>
                         <input
                             type="text"
-                            className="px-4 my-1 h-10 flex items-center w-2/5 rounded-lg appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0 border border-border-base focus:border-accent bg-gray-100"
+                            className="px-4 my-1 h-10 flex items-center w-2/5 rounded-lg appearance-none transition duration-300 ease-in-out text-heading text-sm focus:ring-0 border border-border-base focus:border-accent bg-gray-100"
                             value={weightTo}
                             onChange={handleToChange}
                             onKeyPress={handleApplyRange}

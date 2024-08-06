@@ -109,23 +109,23 @@ export const TypeFilter = ({changedFilter}: Props) => {
 		);
 	}
 	
-	const Option = ({ children, ...props }: any) => (
-		<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-			<label style={{ fontSize: '12px', marginRight: '5px', marginLeft: '10px'  }}>{children}</label>
-			<input
-				type="checkbox"
-				{...props.innerProps}
-				checked={props.isSelected}
-				onChange={() => {
-					const updatedOptions = props.isSelected
-						? selectedOptions.filter(option => option.value !== props.value)
-						: [...selectedOptions, { value: props.value, label: children }];
-					handleSelectChange(updatedOptions);
-				}}
-				style={{ marginRight: '10px' }}
-			/>
-		</div>
-	);
+	// const Option = ({ children, ...props }: any) => (
+	// 	<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+	// 		<label style={{ fontSize: '12px', marginRight: '5px', marginLeft: '10px'  }}>{children}</label>
+	// 		<input
+	// 			type="checkbox"
+	// 			{...props.innerProps}
+	// 			checked={props.isSelected}
+	// 			onChange={() => {
+	// 				const updatedOptions = props.isSelected
+	// 					? selectedOptions.filter(option => option.value !== props.value)
+	// 					: [...selectedOptions, { value: props.value, label: children }];
+	// 				handleSelectChange(updatedOptions);
+	// 			}}
+	// 			style={{ marginRight: '10px' }}
+	// 		/>
+	// 	</div>
+	// );
 
 	const [customStyles, setCustomStyles] = React.useState({
 		selectText: {
@@ -198,18 +198,18 @@ export const TypeFilter = ({changedFilter}: Props) => {
                     }
                 `}
             </style>
-			<div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center">
+			<div className="text-center border border-b-0 lg:border-b border-gray-300 border-t-0 pt-5 lg:pb-5 flex items-center justify-center col-span-2">
 				<p className="text-black text-base font-bold">Type</p>
 			</div>
-			<div className="text-center border border-gray-300 border-t-0 py-5 col-span-11">
+			<div className="text-center border border-gray-300 border-t-0 py-5 col-span-10">
 				<div className="navigation-wrapper relative">
 					<div className="w-[90%] m-auto">
 						<div ref={ref} className="keen-slider">
 							{typeFilterItems?.map((item,index) => 
-								<>
+								<div key={index}>
 									<input type="radio" className="hidden-check type-check" name="diamondtype" checked={item.checked} onChange={(e) => checkChange(index,e)} id={`typecb${index}`} />
-									<label className="keen-slider__slide flex justify-center react-tab align-center p-3 md:max-w-auto" htmlFor={`typecb${index}`}> <p className="font-semibold text-sm">{item.display_name}</p> </label>
-								</>
+									<label className="keen-slider__slide flex justify-center react-tab align-center p-3 md:max-w-auto rounded-md" htmlFor={`typecb${index}`}> <p className="font-semibold text-sm">{item.display_name}</p> </label>
+								</div>
 							)}
 						</div>
 					</div>

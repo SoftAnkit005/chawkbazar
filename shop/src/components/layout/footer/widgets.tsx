@@ -16,7 +16,7 @@ interface WidgetsProps {
 const Widgets: React.FC<WidgetsProps> = ({ widgets }) => {
   return (
     <Container>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 md:gap-9 lg:gap-x-8 xl:gap-5 lg:mb-0.5 2xl:mb-0 3xl:-mb-1">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 md:gap-9 lg:gap-x-8 xl:gap-5 my-[40px]">
         <WidgetImg />
         
         {widgets.map((widget, index) => (
