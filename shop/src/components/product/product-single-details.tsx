@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { SwiperSlide } from "swiper/react";
 import { ProductAttributes } from "./product-attributes";
 import ProductImageCarousel from "./product-image-display";
+import video from "next-seo/lib/jsonld/video";
 
 const productGalleryCarouselResponsive = {
   "768": {
@@ -48,17 +49,15 @@ const stone_extra = 2;
 let i = 0;
 
 const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
-  console.log('products_data',product.shop.wastage_markup_customer)
+  // console.log('products_video',product.video)
   var customer_making_charges = product.shop.making_charges_markup_customer;
   let making_extra = 3;
-  if(customer_making_charges)
-  {
-     making_extra = customer_making_charges;
+  if (customer_making_charges) {
+    making_extra = customer_making_charges;
   }
   var wastage_markup_customer = product.shop.wastage_markup_customer;
   let wastage_extra = 3;
-  if(wastage_markup_customer)
-  {
+  if (wastage_markup_customer) {
     wastage_extra = wastage_markup_customer;
   }
   const variations = getVariations(product?.variations!);
@@ -159,16 +158,25 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type ||
           1)
   )?.rate;
+
   if (minMetalRate) {
+    console.log("minMetalRate", minMetalRate);
     min_price_variation.metal = Number(
       Number(
         Number(min_price_variation?.metal) /
           Number(min_price_variation?.goldPrice)
       ) * Number(minMetalRate)
     )?.toFixed(2);
+
+    console.log("min_price_variation.metal", min_price_variation.metal);
+
     const minWastageValue =
       Number(min_price_variation?.wastage || 0) +
       Number(product?.shop?.wastage_markup || 0);
+
+    console.log("minWastageValue", minWastageValue);
+    console.log("me", me);
+
     min_price_variation.wastagePrice =
       product?.shop?.markup_type === "p"
         ? Number(
@@ -189,6 +197,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
     ) {
       min_price_variation.wastagePrice = 0;
     }
+    console.log("min_price_variation", min_price_variation);
   }
   if (minStoneRate) {
     min_price_variation.stone = Number(
@@ -226,6 +235,11 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
         Number(Number(min_price_variation?.makingCharges * making_extra));
     }
   }
+  console.log("wastage_extra", wastage_extra);
+  console.log(
+    "min_price_variation.wastagePrice",
+    min_price_variation?.wastagePrice
+  );
   if (maxMetalRate) {
     max_price_variation.metal = Number(
       Number(
@@ -293,6 +307,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
         Number(Number(max_price_variation?.makingCharges) * making_extra);
     }
   }
+
   product.min_price = min_price_variation?.price;
   product.max_price = max_price_variation?.price;
 
@@ -426,6 +441,31 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
       }
     }
     isLoadingRate = false;
+
+    const wastage_new =
+      (!me || userType == 1) &&
+      selectedVariation?.wastage &&
+      product?.shop?.wastage_markup //&& Difference_In_Days < 30))
+        ? Number(
+            Number(Number(Number(selectedVariation?.wastage || 0))) +
+              Number(wastage_extra)
+          )
+        : Number(selectedVariation?.wastage || 0) +
+          Number(product?.shop?.wastage_markup || 0);
+
+    console.log("wastage_new", wastage_new);
+
+    const weight_new = Number(wastage_new) * Number(selectedVariation?.netWeight)/100;
+    console.log("weight_new", weight_new);
+
+    if(minMetalRate){
+      selectedVariation.wastagePrice = weight_new*minMetalRate;
+      console.log("selectedVariation.wastagePrice 123", selectedVariation.wastagePrice);
+    }
+    console.log("minMetalRate123", minMetalRate);
+     
+
+
   }
 
   function addToCart() {
@@ -484,43 +524,90 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           buttonClassName="hidden"
         >
           {combineImages?.length > 1 ? (
-            combineImages?.map((item: Attachment, index: number) => (
-              <SwiperSlide key={`product-gallery-key-${index}`}>
+            <>
+              {combineImages?.map((item: Attachment, index: number) => (
+                <SwiperSlide key={`product-gallery-key-${index}`}>
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <Image
+                      width={475}
+                      height={618}
+                      src={
+                        item?.original ??
+                        "https://zweler.com/admin/assets/placeholder/products/product-gallery.svg"
+                      }
+                      alt={`${product?.name}--${index}`}
+                      className={` w-full ${index === 0 ? "zoomed-image" : ""}`}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+              {product.video !== null && product.video.length !== 0 ? (
+                <SwiperSlide
+                  className="flex items-center"
+                  key={`product-gallery-key-${combineImages.length + 1}`}
+                >
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      className={`object-fit-cover rounded-1`}
+                    >
+                      <source src={product.video?.original} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </SwiperSlide>
+              ) : (
+                <></>
+              )}
+            </>
+          ) : (
+            <>
+              <SwiperSlide key={`product-gallery-key`}>
                 <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
                   <Image
                     width={475}
                     height={618}
                     src={
-                      item?.original ??
+                      combineImages?.[0]?.original ??
                       "https://zweler.com/admin/assets/placeholder/products/product-gallery.svg"
                     }
-                    alt={`${product?.name}--${index}`}
-                    className={` w-full ${index === 0 ? "zoomed-image" : ""}`}
+                    alt={product?.name}
+                    className="object-cover w-full"
                   />
                 </div>
               </SwiperSlide>
-            ))
-          ) : (
-            <SwiperSlide key={`product-gallery-key`}>
-              <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
-                <Image
-                  width={475}
-                  height={618}
-                  src={
-                    combineImages?.[0]?.original ??
-                    "https://zweler.com/admin/assets/placeholder/products/product-gallery.svg"
-                  }
-                  alt={product?.name}
-                  className="object-cover w-full"
-                />
-              </div>
-            </SwiperSlide>
+              {product.video !== null && product.video.length !== 0 ? (
+                <SwiperSlide
+                  className="flex items-center"
+                  key={`product-gallery-key-${combineImages.length + 1}`}
+                >
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      className={`object-fit-cover rounded-1`}
+                    >
+                      <source src={product.video?.original} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </SwiperSlide>
+              ) : (
+                <></>
+              )}
+            </>
           )}
         </Carousel>
       ) : (
         <div className="col-span-6 item-center">
           {combineImages?.length ? (
-            <ProductImageCarousel images={combineImages || []} />
+            <ProductImageCarousel
+              images={combineImages || []}
+              video={product.video || []}
+            />
           ) : (
             <span></span>
           )}
@@ -708,9 +795,8 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                     product?.shop?.wastage_markup //&& Difference_In_Days < 30))
                       ? Number(
                           Number(
-                            Number(Number(selectedVariation?.wastage || 0)) +
-                              Number(product?.shop?.wastage_markup || 0)
-                          ) + wastage_extra
+                            Number(Number(selectedVariation?.wastage || 0))
+                          ) + Number(wastage_extra)
                         )
                       : Number(selectedVariation?.wastage || 0) +
                         Number(product?.shop?.wastage_markup || 0);
@@ -871,6 +957,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
         {isEmpty(selectedVariation) && !isLoadingRate ? (
           <li></li>
         ) : (
+         
           <div
             style={{
               display: "flex",
@@ -878,6 +965,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
               justifyContent: "center",
             }}
           >
+           
             <table cellPadding={1} style={{ textAlign: "center" }}>
               <tr>
                 {Number(selectedVariation?.metal) ? (
@@ -904,6 +992,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 ) : (
                   ""
                 )}
+                
                 {Number(selectedVariation?.wastagePrice) ? <td></td> : ""}
                 {Number(selectedVariation?.wastagePrice) ? (
                   <td style={{ fontWeight: "bold", color: "black" }}>
@@ -984,16 +1073,20 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 {Number(selectedVariation?.wastagePrice) ? (
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
-                    {(!me || userType == 1) && selectedVariation?.wastagePrice // && Difference_In_Days < 30))
+                    {round(
+                          Number(
+                            Number(selectedVariation?.wastagePrice)
+                          )
+                        )?.toFixed(0)}
+                    {/* {(!me || userType == 1) && selectedVariation?.wastagePrice // && Difference_In_Days < 30))
                       ? round(
                           Number(
-                            Number(selectedVariation?.wastagePrice) +
-                              wastage_extra
+                            Number(selectedVariation?.wastagePrice)
                           )
                         )?.toFixed(0)
                       : round(Number(selectedVariation?.wastagePrice))?.toFixed(
                           0
-                        ) || Number(0)?.toFixed(0)}
+                        ) || Number(0)?.toFixed(0)} */}
                   </td>
                 ) : (
                   ""
@@ -1060,7 +1153,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                         Number(
                                           Number(
                                             selectedVariation?.wastagePrice
-                                          ) + wastage_extra
+                                          ) + Number(wastage_extra)
                                         )
                                       )?.toFixed(0)
                                     ) +
@@ -1162,7 +1255,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                       Number(
                                         Number(
                                           selectedVariation?.wastagePrice
-                                        ) + wastage_extra
+                                        ) + Number(wastage_extra)
                                       )
                                     )?.toFixed(0)
                                   ) +
@@ -1209,7 +1302,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                             Number(
                                               Number(
                                                 selectedVariation?.wastagePrice
-                                              ) + wastage_extra
+                                              ) + Number(wastage_extra)
                                             )
                                           )?.toFixed(0)
                                         ) +
