@@ -129,7 +129,7 @@ export const FluorescenceFilter = ({changedFilter}: Props) => {
                 "(min-width: 600px)": {
                     slides: { perView: 5, spacing: 10 },
                 },
-                "(min-width: 1000px)": {
+                "(min-width: 1200px)": {
                     slides: { perView: 6, spacing: 10 },
                 },
                 "(min-width: 1500px)": {

@@ -1,21 +1,15 @@
 import React, { useState, useRef } from "react";
 import { ArrowNext } from "@components/icons/arrow-next";
 import { ArrowPrev } from "@components/icons/arrow-prev";
+import { PlayButton } from "@components/icons/play-button";
 
 interface ProductImageCarouselProps {
-  images: [
-    {
-      id: number;
-      original: string;
-      thumbnail: string;
-    }
-  ];
+  images: [ { id: number; original: string; thumbnail: string; } ];
+  video: { id: number; original: string; thumbnail: string; };
   openLuckyForm(): any;
 }
 
-const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
-  images
-}) => {
+const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({ images, video }) => {
   const [isZoomed, setIsZoomed] = useState(false);
 
   const [zoomPosition, setZoomPosition] = useState({ x: 0.5, y: 0.5 });
@@ -67,9 +61,6 @@ const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
   };
 
 
- 
-  
-
   return (
     <div className="item-center relative">
       <div
@@ -79,15 +70,14 @@ const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
         onMouseMove={handleMouseMove}
       >
         <div className="transition duration-150 ease-in hover:opacity-90 flex justify-evenly">
-          <div className="zoom-container">
-          <div
-              className={`w-full h-full zoomed-image object-contain ${isZoomed ? 'zoomed zoomed-in' : ''}`}
-              style={{
-                backgroundImage: `url(${images[currentIndex]?.original || "/"})`,
-                backgroundPosition: `${zoomPosition.x * 100}% ${zoomPosition.y * 100}%`,
-                backgroundSize: isZoomed ? "auto" : "contain"
-              }}
-            ></div>
+          <div className={`video-container h-[550px]  ${(currentIndex === images.length + 1)?'':'hidden'}`}>
+            <video autoPlay loop muted className={`max-h-[500px] object-fit-cover rounded-1`}>
+              <source src={video.original} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div className={`zoom-container ${(currentIndex === images.length + 1)?'hidden':''}`}>
+            <div className={`w-full h-full zoomed-image object-contain ${isZoomed ? 'zoomed zoomed-in' : ''}`} style={{ backgroundImage: `url(${images[currentIndex]?.original || "/"})`, backgroundPosition: `${zoomPosition.x * 100}% ${zoomPosition.y * 100}%`, backgroundSize: isZoomed ? "auto" : "contain" }} ></div>
           </div>
         </div>
       </div>
@@ -112,7 +102,15 @@ const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
               `}
               onClick={() => handleThumbnailClick(index)}
             />
-          ))}
+          ))} 
+          {(video !== null && video.length !== 0)?
+            <button onClick={() => handleThumbnailClick(images?.length + 1)} className="border min-w-[70px] bg-black min-h-[70px] w-15 h-15 xl:w-[70px] xl:h-[70px] mx-1 my-1 w-20 h-20 m-0 p-0 object-fill hover:border-yellow-200 hover:border-2 focus:border-yellow-200 focus:border-2 cursor-pointer flex items-center justify-center" style={{backgroundImage:`url(${video.thumbnail})`, backgroundSize: '100%'}}>
+              <PlayButton />
+            </button>
+            :
+            <></>
+          }
+          {/* <img src="" alt="" /> */}
         </div>
         <div className="self-center cursor-pointer " >
           {currentIndex < images.length - 1 && (

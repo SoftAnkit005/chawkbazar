@@ -11,7 +11,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import Uploader from "../uploader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import ringImage from '/public/assets/images/form_ring.png'
 
 
 const uploadFormSchema = yup.object().shape({
@@ -78,71 +80,89 @@ const UploadYourDesignForm: React.FC = () => {
     setImage(image);
   };
 
+  const [windowWidth, setwindowWidth] = useState(0)
+  useEffect(() => {
+    setwindowWidth(window.innerWidth);
+  }, []);
+
+  console.log(windowWidth);
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full mx-auto flex flex-row justify-center "
-      noValidate
-    >
-      <div className="md:w-7/12 self-center lg:w-2/5 2xl:w-6/12 flex flex-col h-full m-2">
-        {/* <FileInput name="gallery" control={control} /> */}
-        <Uploader onSetImage={onSetImage} emptyImage={emptyImage} />
-      </div>
-      <div className="flex flex-col space-y-5 w-full">
-        <div className="flex flex-col md:flex-row space-y-5 md:space-y-0">
-          <Input
-            labelKey="forms:label-fullname-required"
-            placeholderKey="forms:placeholder-fullname"
-            {...register("fullname")}
-            className="w-full md:w-1/2 "
-            errorKey={t(errors.fullname?.message!)}
-            variant="solid"
-          />
-          <Input
-            labelKey="forms:label-email-required"
-            type="email"
-            placeholderKey="forms:placeholder-email"
-            {...register("email")}
-            className="w-full md:w-1/2 ltr:md:ml-2.5 ltr:lg:ml-5 rtl:md:mr-2.5 rtl:lg:mr-5 mt-2 md:mt-0"
-            errorKey={t(errors.email?.message!)}
-            variant="solid"
-          />
+    <>
+      <style>
+        {`
+            @media only screen and (max-width: 1500px) {
+              .ringImg {
+                max-height:150px
+              }
+            }
+        `}
+      </style>
+      <h4 className="text-heading text-sm xl:text-lg font-semibold mb-2 mx-auto lg:mx-0">Drop Png, JPG</h4>
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full mx-auto block lg:flex flex-row justify-between gap-5 relative px-5" noValidate >
+        <div className="md:w-8/12 lg:w-6/12 2xl:w-5/12 flex flex-col h-full m-2 mx-auto lg:mx-0 mb-9">
+          {/* <FileInput name="gallery" control={control} /> */}
+          <Uploader onSetImage={onSetImage} emptyImage={emptyImage} page="personalizeJewellery"/>
         </div>
-        <div className="flex flex-col md:flex-row space-y-5 md:space-y-0">
-          <Input
-            labelKey="forms:label-mobile-required"
-            {...register("mobile")}
-            className="w-full md:w-1/2 "
-            placeholderKey="forms:placeholder-mobile"
-            errorKey={t(errors.mobile?.message!)}
-            variant="solid"
+        <div className="flex flex-col space-y-5 md:w-8/12 lg:w-6/12 2xl:w-5/12 mx-auto mx-auto lg:mx-0 ">
+          <div className="flex flex-col md:flex-row space-y-5 md:space-y-0">
+            <Input
+              labelKey="forms:label-fullname-required"
+              // placeholderKey="forms:placeholder-fullname"
+              {...register("fullname")}
+              className="w-full md:w-1/2 flex flex-col justify-between"
+              errorKey={t(errors.fullname?.message!)}
+              variant="solid"
+            />
+            <Input
+              labelKey="forms:label-email-required"
+              type="email"
+              // placeholderKey="forms:placeholder-email"
+              {...register("email")}
+              className="w-full md:w-1/2 ltr:md:ml-2.5 ltr:lg:ml-5 rtl:md:mr-2.5 rtl:lg:mr-5 mt-2 md:mt-0 flex flex-col justify-between"
+              errorKey={t(errors.email?.message!)}
+              variant="solid"
+            />
+          </div>
+          <div className="flex flex-col md:flex-row space-y-5 md:space-y-0">
+            <Input
+              labelKey="forms:label-mobile-required"
+              {...register("mobile")}
+              className="w-full md:w-1/2 flex flex-col justify-between"
+              // placeholderKey="forms:placeholder-mobile"
+              errorKey={t(errors.mobile?.message!)}
+              variant="solid"
+            />
+            <Input
+              labelKey="forms:label-budget"
+              {...register("budget")}
+              className="w-full md:w-1/2 ltr:md:ml-2.5 ltr:lg:ml-5 rtl:md:mr-2.5 rtl:lg:mr-5 mt-2 md:mt-0 flex flex-col justify-between"
+              // placeholderKey="forms:placeholder-budget"
+              variant="solid"
+            />
+          </div>
+          <TextArea
+            labelKey="forms:label-details-required"
+            {...register("detail")}
+            className="relative mb-4"
+            // placeholderKey="forms:placeholder-details"
+            errorKey={t(errors.detail?.message!)}
           />
-          <Input
-            labelKey="forms:label-budget"
-            {...register("budget")}
-            className="w-full md:w-1/2 ltr:md:ml-2.5 ltr:lg:ml-5 rtl:md:mr-2.5 rtl:lg:mr-5 mt-2 md:mt-0"
-            placeholderKey="forms:placeholder-budget"
-            variant="solid"
-          />
+          <div className="relative pb-10">
+            <Button
+              loading={loading}
+              type="submit"
+              className="h-12 lg:h-14 mt-1 text-sm lg:text-base w-full sm:w-auto mb-5"
+            >
+              {t("common:button-submit")}
+            </Button>
+            <div className={`absolute right-[-100px] top-[-70px] ${(windowWidth > 767)?'':'hidden'}`}>
+              <Image height={(windowWidth > 1200)?250:200} width={(windowWidth > 1200)?300:250} src={ringImage}/>
+            </div>
+          </div>
         </div>
-        <TextArea
-          labelKey="forms:label-details-required"
-          {...register("detail")}
-          className="relative mb-4"
-          placeholderKey="forms:placeholder-details"
-          errorKey={t(errors.detail?.message!)}
-        />
-        <div className="relative">
-          <Button
-            loading={loading}
-            type="submit"
-            className="h-12 lg:h-14 mt-1 text-sm lg:text-base w-full sm:w-auto"
-          >
-            {t("common:button-submit")}
-          </Button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 

@@ -2,12 +2,13 @@ import { UploadIcon } from "@components/icons/upload-icon";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { CloseIcon } from "@components/icons/close-icon";
+import { ImageUploadIcon } from "@components/icons/image-upload-icon";
 
 interface fileState {
 	id: string;
 	src: string;
   }
-  export default function Uploader({ onSetImage, emptyImage }: any) {
+  export default function Uploader({ onSetImage, emptyImage, page }: any) {
 	const [files, setFiles] = useState<fileState[]>([]);
 	const [validFiles, setValidFiles] = useState([]);
     const {
@@ -52,17 +53,17 @@ interface fileState {
 		if (file.id) {
 		  return (
 			<div
-			  className="inline-flex flex-col overflow-hidden border border-border-200 rounded mt-2 me-2 relative"
+			  className="inline-flex flex-col overflow-hidden border-dashed border border-gray-500 rounded mt-2 mr-2 relative"
 			  key={idx}
 			>
-			  <div className="flex items-center justify-center min-w-0 w-16 h-16 overflow-hidden bg-gray-300">
+			  <div className={`flex items-center justify-center min-w-0 ${(page === 'personalizeJewellery')?'w-20 h-20':'w-16 h-16'}  overflow-hidden bg-gray-300`}>
 				<img src={file.src} />
 			  </div>
 			  <button
-				className="w-4 h-4 flex items-center justify-center rounded-full bg-red-600 text-xs text-light absolute top-1 end-1 shadow-xl outline-none"
+				className="w-3 h-3 flex items-center justify-center rounded-full bg-red-600 text-xs text-light absolute top-1 right-1 shadow-xl outline-none"
 				onClick={() => handleDelete(file.src)}
 			  >
-				<CloseIcon width={10} height={10} />
+				<CloseIcon className="text-white" width={10} height={10} />
 			  </button>
 			</div>
 		  );
@@ -95,8 +96,7 @@ interface fileState {
 			  isDragAccept,
 			  isFocused,
 			  isDragReject,
-			  className:
-				"border-dashed border-2 border-border-base h-36 rounded flex flex-col justify-left items-center cursor-pointer focus:border-gray-500 focus:outline-none",
+			  className: (page === 'personalizeJewellery')?'h-56 border-dashed border-2 rounded flex flex-col justify-center items-center cursor-pointer border-gray-500 focus:border-gray-600 focus:outline-none bg-white': 'h-36 border-dashed border-2 rounded flex flex-col justify-center items-center cursor-pointer border-gray-500 focus:border-gray-600 focus:outline-none',
 			})}
 			onClick={open}
 		  >
@@ -105,7 +105,8 @@ interface fileState {
 				// onChange: handleFile,
 			  })}
 			/>
-			<UploadIcon className="text-muted-light" />
+			{/* <UploadIcon className="text-muted-light" /> */}
+			<ImageUploadIcon/>
 			<p className="text-body text-sm mt-4 text-center">
 			  <span className="text-accent font-semibold">Upload an image</span> or
 			  drag and drop <br />

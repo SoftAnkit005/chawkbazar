@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { SwiperSlide } from "swiper/react";
 import { ProductAttributes } from "./product-attributes";
 import ProductImageCarousel from "./product-image-display";
+import video from "next-seo/lib/jsonld/video";
 
 const productGalleryCarouselResponsive = {
   "768": {
@@ -48,7 +49,7 @@ const stone_extra = 2;
 let i = 0;
 
 const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
-  console.log('products_data',product.shop.wastage_markup_customer)
+  // console.log('products_video',product.video)
   var customer_making_charges = product.shop.making_charges_markup_customer;
   let making_extra = 3;
   if(customer_making_charges)
@@ -484,23 +485,37 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           buttonClassName="hidden"
         >
           {combineImages?.length > 1 ? (
-            combineImages?.map((item: Attachment, index: number) => (
-              <SwiperSlide key={`product-gallery-key-${index}`}>
-                <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
-                  <Image
-                    width={475}
-                    height={618}
-                    src={
-                      item?.original ??
-                      "https://zweler.com/admin/assets/placeholder/products/product-gallery.svg"
-                    }
-                    alt={`${product?.name}--${index}`}
-                    className={` w-full ${index === 0 ? "zoomed-image" : ""}`}
-                  />
-                </div>
-              </SwiperSlide>
-            ))
+            <>
+              {combineImages?.map((item: Attachment, index: number) => (
+                <SwiperSlide key={`product-gallery-key-${index}`}>
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <Image
+                      width={475}
+                      height={618}
+                      src={
+                        item?.original ??
+                        "https://zweler.com/admin/assets/placeholder/products/product-gallery.svg"
+                      }
+                      alt={`${product?.name}--${index}`}
+                      className={` w-full ${index === 0 ? "zoomed-image" : ""}`}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+              {(product.video !== null && product.video.length !== 0)?
+                <SwiperSlide className="flex items-center" key={`product-gallery-key-${combineImages.length + 1}`}>
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <video autoPlay loop muted className={`object-fit-cover rounded-1`}>
+                      <source src={product.video?.original} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </SwiperSlide>
+                : <></>
+              }
+            </>
           ) : (
+            <>
             <SwiperSlide key={`product-gallery-key`}>
               <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
                 <Image
@@ -515,12 +530,24 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 />
               </div>
             </SwiperSlide>
+            {(product.video !== null && product.video.length !== 0)?
+                <SwiperSlide className="flex items-center" key={`product-gallery-key-${combineImages.length + 1}`}>
+                  <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
+                    <video autoPlay loop muted className={`object-fit-cover rounded-1`}>
+                      <source src={product.video?.original} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </SwiperSlide>
+                : <></>
+              }
+            </>
           )}
         </Carousel>
       ) : (
         <div className="col-span-6 item-center">
           {combineImages?.length ? (
-            <ProductImageCarousel images={combineImages || []} />
+            <ProductImageCarousel images={combineImages || []} video={product.video || []} />
           ) : (
             <span></span>
           )}

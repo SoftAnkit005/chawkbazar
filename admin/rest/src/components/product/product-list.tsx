@@ -103,7 +103,7 @@ const ProductList = ({ products, onPagination, onSort, onOrder }: IProps) => {
 			const formData = new FormData();
 			formData.append('product_id', selectedIdsString);
 
-			const response = await fetch('http://127.0.0.1:8000/multiple-publish-products', {
+			const response = await fetch('https://zweler.com/backend/multiple-publish-products', {
 			method: 'POST',
 			body: formData,
 			});

@@ -85,7 +85,7 @@ const ImportedCsvList = ({ csvs, onPagination, onSort, onOrder }: IProps) => {
 			key: "csv_link",
 			align: "center",
 			render: (csv_link: string) => (
-				<a target={"_blank"} href={"http://127.0.0.1:8000/storage/"+csv_link}>{csv_link.replace("csv-files/","")}</a>
+				<a target={"_blank"} href={"https://zweler.com/backend/storage/"+csv_link}>{csv_link.replace("csv-files/","")}</a>
 			),
 		},
 		{
