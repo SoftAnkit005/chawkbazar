@@ -50,12 +50,17 @@ let i = 0;
 
 const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
   // console.log('products_video',product.video)
+
   var customer_making_charges = product.shop.making_charges_markup_customer;
   let making_extra = 3;
   if (customer_making_charges) {
     making_extra = customer_making_charges;
   }
   var wastage_markup_customer = product.shop.wastage_markup_customer;
+
+  console.log("product", product);
+  console.log("wastage_markup_customer", wastage_markup_customer);
+
   let wastage_extra = 3;
   if (wastage_markup_customer) {
     wastage_extra = wastage_markup_customer;
@@ -350,6 +355,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
         Object.values(attributes)?.sort()
       )
     );
+    console.log("selectedVariation first", selectedVariation);
     userType =
       me?.business_profile[Object.keys(me?.business_profile)[0]]
         ?.customer_type ||
@@ -442,6 +448,23 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
     }
     isLoadingRate = false;
 
+    console.log("minMetalRate24", minMetalRate24);
+
+    const customer_making_charges =
+      !me || userType == 1
+        ? product?.shop?.making_charges_markup_customer ?? 0.0
+        : product?.shop?.making_charges_markup ?? 0.0;
+
+    const admin_commission_rate_customer =
+      !me || userType == 1
+        ? product?.shop?.balance?.admin_commission_rate_customer ?? 0.0
+        : product?.shop?.balance?.admin_commission_rate ?? 0.0;
+
+    console.log(
+      "admin_commission_rate_customer",
+      admin_commission_rate_customer
+    );
+
     const wastage_new =
       (!me || userType == 1) &&
       selectedVariation?.wastage &&
@@ -455,17 +478,150 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
 
     console.log("wastage_new", wastage_new);
 
-    const weight_new = Number(wastage_new) * Number(selectedVariation?.netWeight)/100;
+    // customer_making_charges  =  (!me || userType == 1) &&
+    // selectedVariation?.making_charges_markup &&
+    // product?.shop?.making_charges_markup_customer //&& Difference_In_Days < 30))
+    //   ? Number(
+    //       Number(Number(Number(selectedVariation?.wastage || 0))) +
+    //         Number(wastage_extra)
+    //     )
+    //   : Number(selectedVariation?.wastage || 0) +
+    //     Number(product?.shop?.wastage_markup || 0);
+
+    const weight_new =
+      (Number(wastage_new) * Number(selectedVariation?.netWeight)) / 100;
     console.log("weight_new", weight_new);
 
-    if(minMetalRate){
-      selectedVariation.wastagePrice = weight_new*minMetalRate;
-      console.log("selectedVariation.wastagePrice 123", selectedVariation.wastagePrice);
+    if (minMetalRate24 && selectedVariation) {
+      if (
+        selectedVariation?.options &&
+        selectedVariation?.options?.length &&
+        selectedVariation?.options?.find((x: any) =>
+          ["Diamond", "Polki", "SOLITAIRE", "Lab Grown Diamond"]?.includes(
+            x.name
+          )
+        )
+      ) {
+        selectedVariation.wastagePrice = 0;
+      } else {
+        selectedVariation.wastagePrice = weight_new * minMetalRate24;
+      }
+
+      // TODO Calclulate Diamond Price
+      // selectedVariation.price =
     }
+
+    console.log(
+      "selectedVariation.wastagePrice 123",
+      selectedVariation?.wastagePrice
+    );
     console.log("minMetalRate123", minMetalRate);
-     
 
+    //Calculate Diamond Logic.
 
+    console.log("selectedVariation?.diamond", selectedVariation?.diamond);
+    console.log(
+      "selectedVariation?.diamondPrice",
+      selectedVariation?.diamondPrice
+    );
+    console.log(
+      "selectedVariation?.diamondWeight",
+      selectedVariation?.diamondWeight
+    );
+
+    // const diamond1 =  Number(selectedVariation?.diamondPrice + Number((selectedVariation?.diamondPrice * 80/100)));
+
+    const persentage = 1 + admin_commission_rate_customer / 100;
+    console.log("persentage", persentage);
+
+    selectedVariation.diamond = 0.0;
+
+    if (selectedVariation?.diamondPrice && selectedVariation?.diamondWeight) {
+      const diamondPrice = Number(selectedVariation?.diamondPrice);
+      const diamondWeight = Number(selectedVariation?.diamondWeight);
+      const diamond1 = diamondPrice * persentage * diamondWeight;
+
+      console.log("diamondPrice", diamondPrice);
+      console.log("diamondWeight", diamondWeight);
+      console.log("diamond1", diamond1);
+
+      selectedVariation.diamond = diamond1;
+    }
+
+    if (selectedVariation?.diamondPrice1 && selectedVariation?.diamondWeight1) {
+      const diamondPrice = Number(selectedVariation?.diamondPrice1);
+      const diamondWeight = Number(selectedVariation?.diamondWeight1);
+      const diamond2 = diamondPrice * persentage * diamondWeight;
+
+      console.log("diamondPrice", diamondPrice);
+      console.log("diamondWeight", diamondWeight);
+      console.log("diamond1", diamond2);
+
+      selectedVariation.diamond = selectedVariation.diamond + diamond2;
+    }
+
+    if (selectedVariation?.diamondPrice2 && selectedVariation?.diamondWeight2) {
+      const diamondPrice = Number(selectedVariation?.diamondPrice2);
+      const diamondWeight = Number(selectedVariation?.diamondWeight2);
+      const diamond3 = diamondPrice * persentage * diamondWeight;
+
+      console.log("diamondPrice", diamondPrice);
+      console.log("diamondWeight", diamondWeight);
+      console.log("diamond1", diamond3);
+
+      selectedVariation.diamond = selectedVariation.diamond + diamond3;
+    }
+
+    if (selectedVariation?.diamondPrice3 && selectedVariation?.diamondWeight3) {
+      const diamondPrice = Number(selectedVariation?.diamondPrice3);
+      const diamondWeight = Number(selectedVariation?.diamondWeight3);
+      const diamond4 = diamondPrice * persentage * diamondWeight;
+
+      console.log("diamondPrice", diamondPrice);
+      console.log("diamondWeight", diamondWeight);
+      console.log("diamond1", diamond4);
+
+      selectedVariation.diamond = selectedVariation.diamond + diamond4;
+    }
+
+    if (selectedVariation?.diamondPrice4 && selectedVariation?.diamondWeight4) {
+      const diamondPrice = Number(selectedVariation?.diamondPrice4);
+      const diamondWeight = Number(selectedVariation?.diamondWeight4);
+      const diamond5 = diamondPrice * persentage * diamondWeight;
+
+      console.log("diamondPrice", diamondPrice);
+      console.log("diamondWeight", diamondWeight);
+      console.log("diamond1", diamond5);
+
+      selectedVariation.diamond = selectedVariation.diamond + diamond5;
+    }
+
+    console.log("selectedVariation.diamond", selectedVariation.diamond);
+    console.log("customer_making_charges", customer_making_charges);
+
+    // const =
+
+    if (customer_making_charges && selectedVariation?.netWeight) {
+      const persentage = 1 + Number(customer_making_charges) / 100;
+      const making_charges = Number(product?.makingCharges);
+      const net_weight = Number(selectedVariation?.netWeight);
+
+      const final_making_charges = making_charges * persentage * net_weight;
+
+      console.log("final_making_charges", final_making_charges);
+
+      selectedVariation.makingCharges = final_making_charges;
+
+      // const making_charge  = selectedVariation?.netWeight*customer_making_charges
+    }
+
+    console.log("customer_making_charges", customer_making_charges);
+    console.log("selectedVariation?.netWeight", selectedVariation?.netWeight);
+    console.log("product?.makingCharges", product?.makingCharges);
+
+    // const diamond1 = Number(selectedVariation?.diamondPrice) * persentage;
+
+    // console.log("selectedVariation?.diamond1", ((selectedVariation?.diamondPrice+(selectedVariation?.diamondPrice*(admin_commission_rate_customer/100)))*selectedVariation?.diamondWeight));
   }
 
   function addToCart() {
@@ -957,7 +1113,6 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
         {isEmpty(selectedVariation) && !isLoadingRate ? (
           <li></li>
         ) : (
-         
           <div
             style={{
               display: "flex",
@@ -965,7 +1120,6 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
               justifyContent: "center",
             }}
           >
-           
             <table cellPadding={1} style={{ textAlign: "center" }}>
               <tr>
                 {Number(selectedVariation?.metal) ? (
@@ -992,7 +1146,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 ) : (
                   ""
                 )}
-                
+
                 {Number(selectedVariation?.wastagePrice) ? <td></td> : ""}
                 {Number(selectedVariation?.wastagePrice) ? (
                   <td style={{ fontWeight: "bold", color: "black" }}>
@@ -1041,16 +1195,19 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 ) : (
                   ""
                 )}
+                {/* <h1>{stone_extra}: {selectedVariation?.diamond}</h1> */}
                 {Number(selectedVariation?.diamond) ? (
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
-                    {(!me || userType == 1) && selectedVariation?.diamond // && Difference_In_Days < 30))
+
+                    {round(Number(selectedVariation?.diamond))?.toFixed(0)}
+                    {/* {(!me || userType == 1) && selectedVariation?.diamond // && Difference_In_Days < 30))
                       ? round(
                           Number(Number(selectedVariation?.diamond)) *
                             stone_extra
                         )?.toFixed(0)
                       : round(Number(selectedVariation?.diamond))?.toFixed(0) ||
-                        Number(0)?.toFixed(0)}
+                        Number(0)?.toFixed(0)} */}
                   </td>
                 ) : (
                   ""
@@ -1074,10 +1231,8 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
                     {round(
-                          Number(
-                            Number(selectedVariation?.wastagePrice)
-                          )
-                        )?.toFixed(0)}
+                      Number(Number(selectedVariation?.wastagePrice))
+                    )?.toFixed(0)}
                     {/* {(!me || userType == 1) && selectedVariation?.wastagePrice // && Difference_In_Days < 30))
                       ? round(
                           Number(
@@ -1095,7 +1250,10 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 {Number(selectedVariation?.makingCharges) ? (
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
-                    {(!me || userType == 1) && selectedVariation?.makingCharges //&& Difference_In_Days < 30))
+                    {round(Number(selectedVariation?.makingCharges))?.toFixed(
+                      0
+                    ) || Number(0)?.toFixed(0)}
+                    {/* {(!me || userType == 1) && selectedVariation?.makingCharges //&& Difference_In_Days < 30))
                       ? round(
                           Number(
                             Number(selectedVariation?.makingCharges) *
@@ -1104,7 +1262,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                         )?.toFixed(0)
                       : round(
                           Number(selectedVariation?.makingCharges)
-                        )?.toFixed(0) || Number(0)?.toFixed(0)}
+                        )?.toFixed(0) || Number(0)?.toFixed(0)} */}
                   </td>
                 ) : (
                   ""
@@ -1113,6 +1271,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 {Number(selectedVariation?.price) ? (
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
+
                     <div className={"text-base"}>
                       {(!me || userType == 1) &&
                       (selectedVariation?.makingCharges ||
@@ -1136,7 +1295,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                             Number(
                                               selectedVariation?.diamond || 0
                                             ) || 0
-                                          ) * stone_extra
+                                          )
                                         )
                                       ).toFixed(0)
                                     ) +
@@ -1162,7 +1321,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                         Number(
                                           Number(
                                             selectedVariation?.makingCharges
-                                          ) * making_extra
+                                          )
                                         )
                                       )?.toFixed(0)
                                     )
@@ -1216,6 +1375,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                 {Number(selectedVariation?.price) ? (
                   <td>
                     <hr style={{ border: "0.1px solid #2f3737" }} />
+
                     <div className={"text-base"}>
                       {(!me || userType == 1) &&
                       (selectedVariation?.makingCharges ||
@@ -1238,33 +1398,26 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                           Number(
                                             selectedVariation?.diamond || 0
                                           ) || 0
-                                        ) * stone_extra
+                                        )
+                                      )
+                                    )?.toFixed(0)
+                                  ) +
+                                  Number(
+                                    round(
+                                      Number(Number(selectedVariation?.stone))
+                                    )?.toFixed(0)
+                                  ) +
+                                  Number(
+                                    round(
+                                      Number(
+                                        Number(selectedVariation?.wastagePrice)
                                       )
                                     )?.toFixed(0)
                                   ) +
                                   Number(
                                     round(
                                       Number(
-                                        Number(selectedVariation?.stone) *
-                                          stone_extra
-                                      )
-                                    )?.toFixed(0)
-                                  ) +
-                                  Number(
-                                    round(
-                                      Number(
-                                        Number(
-                                          selectedVariation?.wastagePrice
-                                        ) + Number(wastage_extra)
-                                      )
-                                    )?.toFixed(0)
-                                  ) +
-                                  Number(
-                                    round(
-                                      Number(
-                                        Number(
-                                          selectedVariation?.makingCharges
-                                        ) * making_extra
+                                        Number(selectedVariation?.makingCharges)
                                       )
                                     )?.toFixed(0)
                                   )
@@ -1285,15 +1438,14 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                                   selectedVariation?.diamond ||
                                                     0
                                                 ) || 0
-                                              ) * stone_extra
+                                              )
                                             )
                                           )?.toFixed(0)
                                         ) +
                                         Number(
                                           round(
                                             Number(
-                                              Number(selectedVariation?.stone) *
-                                                stone_extra
+                                              Number(selectedVariation?.stone)
                                             )
                                           )?.toFixed(0)
                                         ) +
@@ -1302,7 +1454,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                             Number(
                                               Number(
                                                 selectedVariation?.wastagePrice
-                                              ) + Number(wastage_extra)
+                                              )
                                             )
                                           )?.toFixed(0)
                                         ) +
@@ -1311,7 +1463,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                                             Number(
                                               Number(
                                                 selectedVariation?.makingCharges
-                                              ) * making_extra
+                                              )
                                             )
                                           )?.toFixed(0)
                                         )
