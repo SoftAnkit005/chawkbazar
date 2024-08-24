@@ -40,8 +40,8 @@ type Props = {
 };
 
 let counter = 0;
-let allAttr:any = [];
-let realTimeSelected:any = {};
+let allAttr: any = [];
+let realTimeSelected: any = {};
 let counter2 = 0;
 
 const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
@@ -50,53 +50,49 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
   // const { data:shopData } = useShopQuery(product?.shop?.slug!.toString());
   const { me } = useUser();
   // const currentUserIdentity = me?.email;
-  let { data:userAttributesList } = useAttributesQuery();
+  let { data: userAttributesList } = useAttributesQuery();
   let userAttriutes = userAttributesList?.attributes;
   let userMetalAttribute = [];
   // let userStoneAttribute = [];
   let metalAttribute = [];
   let stoneAttribute = [];
 
-    let variation_options = product?.variation_options;
-    variation_options = orderBy(variation_options,['price'],['asc']);
-    let min_price_variation = cloneDeep(variation_options[0]);
-    let max_price_variation = cloneDeep(variation_options[variation_options?.length - 1]);
-    let min_price_variation_options = min_price_variation?.options;
-    let max_price_variation_options = max_price_variation?.options;
-    let min_price_metal_attribute = min_price_variation_options?.find((x:any)=>["Gold","Silver","Platinum"].includes((x.name)));
-    let min_price_stone_attribute = min_price_variation_options?.find((x:any)=>["Diamond","Polki","SOLITAIRE","Lab Grown Diamond"].includes((x.name)));
-    let max_price_metal_attribute = max_price_variation_options?.find((x:any)=>["Gold","Silver","Platinum"].includes((x.name)));
-    let max_price_stone_attribute = max_price_variation_options?.find((x:any)=>["Diamond","Polki","SOLITAIRE","Lab Grown Diamond"].includes((x.name)));
-    metalAttribute = userAttriutes?.filter(x=>x.name == min_price_metal_attribute?.name) || [];
-    stoneAttribute = userAttriutes?.filter(x=>x.name == min_price_stone_attribute?.name) || [];
-    let minMetalRate = metalAttribute[0]?.values.find((z:any)=>z.value == min_price_metal_attribute?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1))?.rate;
-    let minStoneRate = stoneAttribute[0]?.values.find((z:any)=>z.value == min_price_stone_attribute?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1))?.rate;
-    let maxMetalRate = metalAttribute[0]?.values.find((z:any)=>z.value == max_price_metal_attribute?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1))?.rate;
-    let maxStoneRate = stoneAttribute[0]?.values.find((z:any)=>z.value == max_price_stone_attribute?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1))?.rate;
-    if(minMetalRate)
-    {
-      min_price_variation.metal = Number(Number(Number(min_price_variation.metal)/Number(min_price_variation.goldPrice))*Number(minMetalRate)).toFixed(2);
-    }
-    if(minStoneRate){
-      min_price_variation.stone = Number(Number(Number(min_price_variation.stone)/Number(min_price_variation.diamondPrice))*Number(minStoneRate)).toFixed(2);
-    }
-    if(min_price_variation)
-    {
-      min_price_variation.price = Number(min_price_variation?.metal) + Number(min_price_variation?.stone) + Number(min_price_variation?.wastagePrice) + Number(min_price_variation?.makingCharges);
-    }
-    if(maxMetalRate)
-    {
-      max_price_variation.metal = Number(Number(Number(max_price_variation.metal)/Number(max_price_variation.goldPrice))*Number(maxMetalRate)).toFixed(2);
-    }
-    if(maxStoneRate){
-      max_price_variation.stone = Number(Number(Number(max_price_variation.stone)/Number(max_price_variation.diamondPrice))*Number(maxStoneRate)).toFixed(2);
-    }
-    if(max_price_variation)
-    {
-      max_price_variation.price = Number(max_price_variation?.metal) + Number(max_price_variation?.stone) + Number(max_price_variation?.wastagePrice) + Number(max_price_variation?.makingCharges);
-    }
-    product.min_price = min_price_variation?.price;
-    product.max_price = max_price_variation?.price;
+  let variation_options = product?.variation_options;
+  variation_options = orderBy(variation_options, ['price'], ['asc']);
+  let min_price_variation = cloneDeep(variation_options[0]);
+  let max_price_variation = cloneDeep(variation_options[variation_options?.length - 1]);
+  let min_price_variation_options = min_price_variation?.options;
+  let max_price_variation_options = max_price_variation?.options;
+  let min_price_metal_attribute = min_price_variation_options?.find((x: any) => ["Gold", "Silver", "Platinum"].includes((x.name)));
+  let min_price_stone_attribute = min_price_variation_options?.find((x: any) => ["Diamond", "Polki", "SOLITAIRE", "Lab Grown Diamond"].includes((x.name)));
+  let max_price_metal_attribute = max_price_variation_options?.find((x: any) => ["Gold", "Silver", "Platinum"].includes((x.name)));
+  let max_price_stone_attribute = max_price_variation_options?.find((x: any) => ["Diamond", "Polki", "SOLITAIRE", "Lab Grown Diamond"].includes((x.name)));
+  metalAttribute = userAttriutes?.filter(x => x.name == min_price_metal_attribute?.name) || [];
+  stoneAttribute = userAttriutes?.filter(x => x.name == min_price_stone_attribute?.name) || [];
+  let minMetalRate = metalAttribute[0]?.values.find((z: any) => z.value == min_price_metal_attribute?.value && z.vendor_type == (orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type || 1))?.rate;
+  let minStoneRate = stoneAttribute[0]?.values.find((z: any) => z.value == min_price_stone_attribute?.value && z.vendor_type == (orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type || 1))?.rate;
+  let maxMetalRate = metalAttribute[0]?.values.find((z: any) => z.value == max_price_metal_attribute?.value && z.vendor_type == (orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type || 1))?.rate;
+  let maxStoneRate = stoneAttribute[0]?.values.find((z: any) => z.value == max_price_stone_attribute?.value && z.vendor_type == (orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type || 1))?.rate;
+  if (minMetalRate) {
+    min_price_variation.metal = Number(Number(Number(min_price_variation.metal) / Number(min_price_variation.goldPrice)) * Number(minMetalRate)).toFixed(2);
+  }
+  if (minStoneRate) {
+    min_price_variation.stone = Number(Number(Number(min_price_variation.stone) / Number(min_price_variation.diamondPrice)) * Number(minStoneRate)).toFixed(2);
+  }
+  if (min_price_variation) {
+    min_price_variation.price = Number(min_price_variation?.metal) + Number(min_price_variation?.stone) + Number(min_price_variation?.wastagePrice) + Number(min_price_variation?.makingCharges);
+  }
+  if (maxMetalRate) {
+    max_price_variation.metal = Number(Number(Number(max_price_variation.metal) / Number(max_price_variation.goldPrice)) * Number(maxMetalRate)).toFixed(2);
+  }
+  if (maxStoneRate) {
+    max_price_variation.stone = Number(Number(Number(max_price_variation.stone) / Number(max_price_variation.diamondPrice)) * Number(maxStoneRate)).toFixed(2);
+  }
+  if (max_price_variation) {
+    max_price_variation.price = Number(max_price_variation?.metal) + Number(max_price_variation?.stone) + Number(max_price_variation?.wastagePrice) + Number(max_price_variation?.makingCharges);
+  }
+  product.min_price = min_price_variation?.price;
+  product.max_price = max_price_variation?.price;
 
   const { t } = useTranslation();
   const { width } = useWindowSize();
@@ -112,13 +108,13 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
 
   const isSelected = !isEmpty(variations)
     ? !isEmpty(attributes) &&
-      Object.keys(variations).every((variation) =>
-        attributes.hasOwnProperty(variation)
-      )
+    Object.keys(variations).every((variation) =>
+      attributes.hasOwnProperty(variation)
+    )
     : true;
   let selectedVariation: any = product?.variation_options[0];
   //handleAttribute(variations[0]);
-  
+
   if (isSelected) {
     selectedVariation = product?.variation_options?.find((o: any) =>
       isEqual(
@@ -128,20 +124,19 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
     );
     counter++;
   }
-  
-  if(counter == 1){
+
+  if (counter == 1) {
     let valueMetal = {
-      name:'',
-      value:'',
+      name: '',
+      value: '',
     };
     // let valueStone = {
     //   name:'',
     //   value:'',
     // };
-    userMetalAttribute = compact(userAttriutes?.map((x:any)=>{
-     valueMetal = selectedVariation?.options?.find((y:any)=>["Gold","Silver","Platinum"].includes(y.name));
-      if(x.name == valueMetal?.name)
-      {
+    userMetalAttribute = compact(userAttriutes?.map((x: any) => {
+      valueMetal = selectedVariation?.options?.find((y: any) => ["Gold", "Silver", "Platinum"].includes(y.name));
+      if (x.name == valueMetal?.name) {
         return x;
       }
     }));
@@ -152,17 +147,15 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
     //      return x;
     //    }
     //  }));
-    let userMetalRate = userMetalAttribute[0]?.values.find((z:any)=>z.value == valueMetal?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1)).rate;
+    let userMetalRate = userMetalAttribute[0]?.values.find((z: any) => z.value == valueMetal?.value && z.vendor_type == (orderBy(me?.shops, ["customer_type"], ["desc"])?.[0]?.customer_type || 1)).rate;
     // let userStoneRate = userStoneAttribute[0]?.values.find((z:any)=>z.value == valueStone?.value && z.vendor_type == (orderBy(me?.shops,["customer_type"],["desc"])?.[0]?.customer_type || 1)).rate;
-    if(userMetalRate)
-    {
-      selectedVariation.metal = Number(Number(Number(selectedVariation.metal)/Number(selectedVariation.goldPrice))*Number(userMetalRate)).toFixed(2);
+    if (userMetalRate) {
+      selectedVariation.metal = Number(Number(Number(selectedVariation.metal) / Number(selectedVariation.goldPrice)) * Number(userMetalRate)).toFixed(2);
     }
     // if(userStoneRate){
     //   selectedVariation.stone = Number(Number(Number(selectedVariation.stone)/Number(selectedVariation.diamondPrice))*Number(userStoneRate)).toFixed(2);
     // }
-    if(selectedVariation)
-    {
+    if (selectedVariation) {
       selectedVariation.price = Number(selectedVariation?.metal) + Number(selectedVariation?.stone) + Number(selectedVariation?.wastagePrice) + Number(selectedVariation?.makingCharges);
     }
   }
@@ -176,7 +169,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
       setAddToCartLoader(false);
     }, 600);
 
-    const item:any = generateCartItem(product!, selectedVariation);
+    const item: any = generateCartItem(product!, selectedVariation);
     addItemToCart(item, quantity);
     toast(t("add-to-cart"), {
       type: "dark",
@@ -201,7 +194,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
       ...attribute,
     }));
     realTimeSelected[Object.keys(attribute)[0]] = attribute[Object.keys(attribute)[0]];
-    if(!allAttr?.includes(Object.values(realTimeSelected).sort().join(""))){
+    if (!allAttr?.includes(Object.values(realTimeSelected).sort().join(""))) {
       allAttr?.push(Object.values(realTimeSelected).sort().join(""));
       counter = 0;
     }
@@ -216,12 +209,10 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
   // Combine image and gallery
   const combineImages = [...product?.gallery, product?.image];
   let firstAttributes = {};
-  for(let i=0; i < Object.keys(variations).length; i++)
-  {
-      firstAttributes[Object.keys(variations)[i]] = variations[Object.keys(variations)[i]]?.[0]?.value;
+  for (let i = 0; i < Object.keys(variations).length; i++) {
+    firstAttributes[Object.keys(variations)[i]] = variations[Object.keys(variations)[i]]?.[0]?.value;
   }
-  if(!counter2)
-  {    
+  if (!counter2) {
     setAttributes(firstAttributes);
     counter2++;
   }
@@ -239,10 +230,10 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           {combineImages?.length > 1 ? (
             combineImages?.map((item: Attachment, index: number) => (
               <SwiperSlide
-              onClick={()=>openLuckyForm()}
-              key={`product-gallery-key-${index}`}>
+                onClick={() => openLuckyForm()}
+                key={`product-gallery-key-${index}`}>
                 <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
-                
+
                   <Image
                     width={475}
                     height={618}
@@ -257,9 +248,9 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
               </SwiperSlide>
             ))
           ) : (
-            <SwiperSlide 
-            onClick={()=>openLuckyForm()}
-            key={`product-gallery-key`}>
+            <SwiperSlide
+              onClick={() => openLuckyForm()}
+              key={`product-gallery-key`}>
               <div className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex">
                 <Image
                   width={475}
@@ -280,7 +271,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           {combineImages?.length > 1 ? (
             combineImages?.map((item: Attachment, index: number) => (
               <div
-              onClick={()=>openLuckyForm()}
+                onClick={() => openLuckyForm()}
                 key={index}
                 className="col-span-1 transition duration-150 ease-in hover:opacity-90 flex"
               >
@@ -298,7 +289,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
             ))
           ) : (
             <div className="col-span-full bg-gray-300 flex justify-center rounded-md"
-            onClick={()=>openLuckyForm()}
+              onClick={() => openLuckyForm()}
             >
               <div className="transition duration-150 ease-in hover:opacity-90 w-1/2 flex">
                 <Image
@@ -327,28 +318,28 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           </p>
           {
             Number(selectedVariation?.netWeight) > 0 ?
-          <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
-            NET WEIGHT &nbsp;&nbsp;: &nbsp; {selectedVariation?.netWeight}
-          </p> : ""
+              <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
+                NET WEIGHT &nbsp;&nbsp;: &nbsp; {selectedVariation?.netWeight}
+              </p> : ""
           }
           {
             Number(selectedVariation?.diamondWeight) > 0 ?
-          <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
-            {[2,3].includes(product?.type?.id) ? 'DIAMOND CARAT' : 'STONE CARAT'}  : &nbsp; {selectedVariation?.diamondWeight}
-          </p> : ""
+              <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
+                {[2, 3].includes(product?.type?.id) ? 'DIAMOND CARAT' : 'STONE CARAT'}  : &nbsp; {selectedVariation?.diamondWeight}
+              </p> : ""
           }
           {
             Number(selectedVariation?.stoneWeight) > 0 ?
-          <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
-            STONE CARAT &nbsp; &nbsp; &nbsp;&nbsp;: &nbsp; {selectedVariation?.stoneWeight}
-          </p> : ""
+              <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
+                STONE CARAT &nbsp; &nbsp; &nbsp;&nbsp;: &nbsp; {selectedVariation?.stoneWeight}
+              </p> : ""
           }
           {
             Number(selectedVariation?.wastage) > 0 ?
-          <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
-            WASTAGE {product?.shop?.markup_type == 'p' ? '%' :''}&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp; {Number(selectedVariation?.wastage) + Number(product?.shop?.wastage_markup)}
-          </p>:""
-}
+              <p className="text-body text-sm lg:text-base leading-6 lg:leading-8">
+                WASTAGE {product?.shop?.markup_type == 'p' ? '%' : ''}&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp; {Number(selectedVariation?.wastage) + Number(product?.shop?.wastage_markup)}
+              </p> : ""
+          }
           <div className="flex items-center mt-5">
             {!isEmpty(variations) ? (
               <VariationPrice
@@ -411,12 +402,12 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           {!isEmpty(selectedVariation) && (
             <>
               {
-              // selectedVariation?.is_disable ||
-              // selectedVariation.quantity === 0 ? (
-              //   <div className="text-base text-red-500 whitespace-nowrap ltr:lg:ml-7 rtl:lg:mr-7">
-              //     {t("text-out-stock")}
-              //   </div>
-              // ) : (
+                // selectedVariation?.is_disable ||
+                // selectedVariation.quantity === 0 ? (
+                //   <div className="text-base text-red-500 whitespace-nowrap ltr:lg:ml-7 rtl:lg:mr-7">
+                //     {t("text-out-stock")}
+                //   </div>
+                // ) : (
                 <Counter
                   quantity={quantity}
                   onIncrement={() => setQuantity((prev) => prev + 1)}
@@ -428,19 +419,19 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                     Number(selectedVariation.quantity) === quantity
                   }
                 />
-              // )
-            }
+                // )
+              }
             </>
           )}
           <Button
             onClick={addToCart}
             variant="slim"
             className={`w-full md:w-6/12 xl:w-full `
-          }
+            }
             // ${
             //   !isSelected && "bg-gray-400 hover:bg-gray-400"
             // }
-            
+
             // disabled={
             //   !isSelected ||
             //   !product?.quantity ||
@@ -450,31 +441,31 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
           >
             <span className="py-2 3xl:px-8">
               {product?.quantity ||
-              (!isEmpty(selectedVariation) && selectedVariation?.quantity)
+                (!isEmpty(selectedVariation) && selectedVariation?.quantity)
                 ? t("text-add-to-cart")
-                : 
+                :
                 //t("text-out-stock")
                 t("text-add-to-cart")
-                }
+              }
             </span>
           </Button>
         </div>
         <div
-            className={`border-b border-gray-300`}
+          className={`border-b border-gray-300`}
         >
-        <span
+          <span
             className={`w-full md:w-6/12 xl:w-full text-center`}
-        ><p
-        className={`text-center`}
-        >
-          {product?.quantity ||
-              (!isEmpty(selectedVariation) && selectedVariation?.quantity)
+          ><p
+            className={`text-center`}
+          >
+              {product?.quantity ||
+                (!isEmpty(selectedVariation) && selectedVariation?.quantity)
                 ? ''
                 //`Ready to ship in ${product?.zero_inventory_fill} days`
-              :`Ready to ship`
+                : `Ready to ship`
               }
-        </p></span>
-        <br/>
+            </p></span>
+          <br />
         </div>
         <div className="py-6">
           <ul className="text-sm space-y-5 pb-1">
@@ -527,166 +518,166 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                   ))}
                 </li>
               )}
-{isEmpty(selectedVariation) ? <li></li> :
-                    <li>
-                      <table cellPadding={5} style={{textAlign:"center"}}>
-                        <tr>
-                        {
-                        Number(selectedVariation.metal) ?
-
-                          <td>
-                      Metal
-                      </td> : ""
-}
-                      {
-                        Number(selectedVariation.stone) ?
-                      <td></td> : ""
-                      }
-                      {
-                        Number(selectedVariation.stone) ?
-                      <td>
-                      Stone
-                      </td> : ""
-                      }
-                      {
-                        Number(selectedVariation.wastagePrice) ?
-                      <td></td> : ""
-                      }
-                      {
-                        Number(selectedVariation.wastagePrice) ?
-                      <td>
-                      Wastage
-                      </td> : ""
-                      }
-                      {
-                        Number(selectedVariation.makingCharges) ?
-                      <td></td> : ""
-                      }
-                      {
-                        Number(selectedVariation.makingCharges) ?
-                      <td>
-                      Making Charges
-                      </td> : ""
-                      }
+            {isEmpty(selectedVariation) ? <li></li> :
+              <li>
+                <table cellPadding={5} style={{ textAlign: "center" }}>
+                  <tr>
                     {
-                        Number(selectedVariation.price) ?
-                      <td></td> : ""
-}
-{
-                        Number(selectedVariation.price) ?
+                      Number(selectedVariation.metal) ?
 
                         <td>
-                      GST ({product?.type?.id < 5 ? 3 : 1.5}%)
-                      </td> : ""
-}
-                      {/* <td></td>
+                          Metal
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.stone) ?
+                        <td></td> : ""
+                    }
+                    {
+                      Number(selectedVariation.stone) ?
+                        <td>
+                          Stone
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.wastagePrice) ?
+                        <td></td> : ""
+                    }
+                    {
+                      Number(selectedVariation.wastagePrice) ?
+                        <td>
+                          Wastage
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.makingCharges) ?
+                        <td></td> : ""
+                    }
+                    {
+                      Number(selectedVariation.makingCharges) ?
+                        <td>
+                          Making Charges
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
+                        <td></td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
+
+                        <td>
+                          GST ({product?.type?.id < 5 ? 3 : 1.5}%)
+                        </td> : ""
+                    }
+                    {/* <td></td>
                       <td>
                       Tax
                       </td> */}
-                     {
-                        Number(selectedVariation.price) ?
-                      <td></td> : ""
-}
-{
-                        Number(selectedVariation.price) ?
+                    {
+                      Number(selectedVariation.price) ?
+                        <td></td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
 
                         <td>
-                      Total
-                      </td> : ""
-}
-                      </tr>
-                      <tr>
-                        {
-                      Number(selectedVariation.metal) ?
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                      {
-                        Number(selectedVariation.metal).toFixed(0) || Number(0).toFixed(0)
-                      }
-                      </td>:""
-}
-                      {
-                        Number(selectedVariation.stone) ?
-                      <td>+</td> : ""
-                      }
-                      {
-                        Number(selectedVariation.stone) ?
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                        {
-                        Number(selectedVariation.stone).toFixed(0) || Number(0).toFixed(0)
-                        }
+                          Total
                         </td> : ""
-                      }
-                      {
-                        Number(selectedVariation.wastagePrice) ?
-                      <td>+</td> : ""
-                      }
-                      {
-                        Number(selectedVariation.wastagePrice) ?
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                        {
-                          Number(selectedVariation.wastagePrice).toFixed(0) || Number(0).toFixed(0)
-                        }
-                      </td> : ""
-                      }
-                      {
-                        Number(selectedVariation.makingCharges) ?
-                      <td>+</td> : ""
-                      }
-                      {
-                        Number(selectedVariation.makingCharges) ?
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                        {
-                          Number(selectedVariation.makingCharges).toFixed(0) || Number(0).toFixed(0)
-                        }
-                      </td> :""
-                      }
-                                           {
-                        Number(selectedVariation.price) ?
-                      <td>+</td> : ""
-}
-{
-                        Number(selectedVariation.price) ?
+                    }
+                  </tr>
+                  <tr>
+                    {
+                      Number(selectedVariation.metal) ?
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          {
+                            Number(selectedVariation.metal).toFixed(0) || Number(0).toFixed(0)
+                          }
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.stone) ?
+                        <td>+</td> : ""
+                    }
+                    {
+                      Number(selectedVariation.stone) ?
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          {
+                            Number(selectedVariation.stone).toFixed(0) || Number(0).toFixed(0)
+                          }
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.wastagePrice) ?
+                        <td>+</td> : ""
+                    }
+                    {
+                      Number(selectedVariation.wastagePrice) ?
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          {
+                            Number(selectedVariation.wastagePrice).toFixed(0) || Number(0).toFixed(0)
+                          }
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.makingCharges) ?
+                        <td>+</td> : ""
+                    }
+                    {
+                      Number(selectedVariation.makingCharges) ?
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          {
+                            Number(selectedVariation.makingCharges).toFixed(0) || Number(0).toFixed(0)
+                          }
+                        </td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
+                        <td>+</td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
 
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                    <div className={"text-base"}>
-                        {
-                          Number(Number(Number(selectedVariation.price)/100)*(product?.type?.id < 5 ? 3 : 1.5)).toFixed(0) || Number(0).toFixed(0)
-                        }
-                        </div>
-                      </td>
-                      : ""
-}
-                      {/* <td>+</td>
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          <div className={"text-base"}>
+                            {
+                              Number(Number(Number(selectedVariation.price) / 100) * (product?.type?.id < 5 ? 3 : 1.5)).toFixed(0) || Number(0).toFixed(0)
+                            }
+                          </div>
+                        </td>
+                        : ""
+                    }
+                    {/* <td>+</td>
                       <td>
                     <hr style={{border:"0.1px solid grey" }}/>
                       {Number(Number(Number(selectedVariation.price)/(100 + Number(applicableTax)))*Number(applicableTax)).toFixed(2)}
                       </td> */}
-                      {
-                        Number(selectedVariation.price) ?
-                      <td>=</td> : ""
-}
-{
-                        Number(selectedVariation.price) ?
+                    {
+                      Number(selectedVariation.price) ?
+                        <td>=</td> : ""
+                    }
+                    {
+                      Number(selectedVariation.price) ?
 
-                      <td>
-                    <hr style={{border:"0.1px solid grey" }}/>
-                    <div className={"text-base"}>
-                        {
-                          Number(Number(selectedVariation.price) + Number(Number(Number(selectedVariation.price)/100)*(product?.type?.id < 5 ? 3 : 1.5))).toFixed(0) || Number(0).toFixed(0)
-                        }
-                        </div>
-                      </td>
-                      : ""
-}
-                      </tr>
-                      </table>
-                    </li>}
-                    <hr style={{border:"0.1px solid grey" }}/>
+                        <td>
+                          <hr style={{ border: "0.1px solid grey" }} />
+                          <div className={"text-base"}>
+                            {
+                              Number(Number(selectedVariation.price) + Number(Number(Number(selectedVariation.price) / 100) * (product?.type?.id < 5 ? 3 : 1.5))).toFixed(0) || Number(0).toFixed(0)
+                            }
+                          </div>
+                        </td>
+                        : ""
+                    }
+                  </tr>
+                </table>
+              </li>}
+            <hr style={{ border: "0.1px solid grey" }} />
 
             <li>
               <span className="font-semibold text-heading inline-block ltr:pr-2 rtl:pl-2">

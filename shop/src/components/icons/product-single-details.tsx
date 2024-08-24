@@ -670,8 +670,6 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
     }, 600);
 
     const item: any = generateCartItem(product!, selectedVariation);
-    console.log("add to cart: ",item);
-    item["price"] = item.price*(1.03);
     addItemToCart(item, quantity);
     toast(t("add-to-cart"), {
       type: "dark",
@@ -1317,8 +1315,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                     <hr style={{ border: "0.1px solid #2f3737" }} />
 
                     <div className={"text-base"}>
-                      {round(Number(selectedVariation?.price || 0) * (0.03)).toFixed(0)}
-                      {/* {(!me || userType == 1) &&
+                      {(!me || userType == 1) &&
                         (selectedVariation?.makingCharges ||
                           selectedVariation?.metal ||
                           selectedVariation?.stone ||
@@ -1410,7 +1407,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                               ) / 100
                             ) * (product?.type?.id < 5 ? 3 : 1.5)
                           )
-                        )?.toFixed(0) || Number(0)?.toFixed(0)} */}
+                        )?.toFixed(0) || Number(0)?.toFixed(0)}
                     </div>
                   </td>
                 ) : (
@@ -1422,7 +1419,7 @@ const ProductSingleDetails: React.FC<Props> = ({ product }: any) => {
                     <hr style={{ border: "0.1px solid #2f3737" }} />
 
                     <div className={"text-base"}>
-                      {round(Number(selectedVariation?.price || 0) * (1.03)).toFixed(0)}
+                      {round(Number(selectedVariation?.price || 0)*(1.03)).toFixed(0)}
                       {/* {(!me || userType == 1) &&
                         (selectedVariation?.makingCharges ||
                           selectedVariation?.metal ||
