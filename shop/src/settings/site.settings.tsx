@@ -11,8 +11,8 @@ export const siteSettings = {
     "Integrated Jewellery B2B platform",
   author: {
     name: "Zweler",
-    powerName:"ATPL",
-    websiteUrl: "https://www.aviraltrendzpvtltd.com",
+    powerName:"Softieons",
+    websiteUrl: "https://softieons.com/",
     address: "",
   },
   logo: {

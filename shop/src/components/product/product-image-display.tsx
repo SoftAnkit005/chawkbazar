@@ -77,7 +77,7 @@ const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({ images, vid
             </video>
           </div>
           <div className={`zoom-container ${(currentIndex === images.length + 1)?'hidden':''}`}>
-            <div className={`w-full h-full zoomed-image object-contain ${isZoomed ? 'zoomed zoomed-in' : ''}`} style={{ backgroundImage: `url(${images[currentIndex]?.original || "/"})`, backgroundPosition: `${zoomPosition.x * 100}% ${zoomPosition.y * 100}%`, backgroundSize: isZoomed ? "auto" : "contain" }} ></div>
+            <div className={`w-full h-full zoomed-image object-contain ${isZoomed ? 'zoomed zoomed-in' : ''}`} style={{ backgroundImage: `url('${images[currentIndex]?.original || "/"}')`, backgroundPosition: `${zoomPosition.x * 100}% ${zoomPosition.y * 100}%`, backgroundSize: isZoomed ? "auto" : "contain" }} ></div>
           </div>
         </div>
       </div>
