@@ -8,7 +8,7 @@ import { useWindowSize } from "@utils/use-window-size";
 const fluorescenceFilterItems = [
     { id: "1", name: "NONE", slug: "NONE", checked: false },
     { id: "2", name: "VERY SLIGHT", slug: "VERY SLIGHT", checked: false },
-    { id: "3", name: "FAINT/SLIGHT", slug: "FAINT/SLIGHT", checked: false },
+    { id: "3", name: "FAINT/SLIGHT",slug: "FAINT/SLIGHT", checked: 0 },
     { id: "4", name: "FAINT", slug: "FAINT", checked: false },
     { id: "5", name: "SLIGHT", slug: "SLIGHT", checked: false },
     { id: "6", name: "MEDIUM", slug: "MEDIUM", checked: false },
@@ -158,14 +158,34 @@ export const FluorescenceFilter = ({changedFilter}: Props) => {
     }, [changedFilter])
 
     const checkChange = (index:number,e:any) => {
-		fluorescenceFilterItems[index].checked = e.target.checked;
-		let selOpt = fluorescenceFilterItems.filter((items) => items.checked === true)
+        
+        if(e.target.id === 'fluorescencecb3' && e.target.checked === true){
+            fluorescenceFilterItems.map((item) => {
+                if(item.id === "4" || item.id === "5"){
+                    item.checked = true
+                }
+            })
+            fluorescenceFilterItems[index].checked = 1;
+        } else if(e.target.id === 'fluorescencecb3' && e.target.checked === false){
+            fluorescenceFilterItems.map((item) => {
+                if(item.id === "4" || item.id === "5"){
+                    item.checked = false
+                }
+            })
+            fluorescenceFilterItems[index].checked = 0;
+        }else {
+            fluorescenceFilterItems[index].checked = e.target.checked;
+        }
+
+        let selOpt = fluorescenceFilterItems.filter((items) => items.checked === true)
+
 		let currentChecked = selOpt.map((item) => {
 				return item.slug
 			}
 		)
         setSelectedValues(currentChecked);
         const updatedQuery = { ...query, fluorescence: currentChecked };
+        console.log('updatedQuery::',updatedQuery);
 	
 		router.push(
 			{
@@ -252,11 +272,16 @@ export const FluorescenceFilter = ({changedFilter}: Props) => {
                     <div className="w-[90%] m-auto">
                         <div ref={ref} className="keen-slider">
                             {fluorescenceFilterItems?.map((item,index) => 
-                                <>
-                                    <input type="checkbox" className="hidden-check fluorescence-check" checked={item.checked} name="cb" onChange={(e) => checkChange(index,e)} id={`fluorescencecb${index}`} />
-                                    <label className="keen-slider__slide border border-[#fff] rounded-lg  hover:border-[#24182E] p-2 number-slide1 flex flex-col items-center justify-center" htmlFor={`fluorescencecb${index}`}> <p className="font-semibold text-sm">{item.name}</p> </label>
-                                </>
-                            )}
+                                (item.name === "FAINT" || item.name === "SLIGHT")
+                                ?
+                                    <></>
+                                :
+                                    <>
+                                        <input type="checkbox" className="hidden-check fluorescence-check" checked={!!item.checked} name="cb" onChange={(e) => checkChange(index,e)} id={`fluorescencecb${item.id}`} />
+                                        <label className="keen-slider__slide border border-[#fff] rounded-lg  hover:border-[#24182E] p-2 number-slide1 flex flex-col items-center justify-center" htmlFor={`fluorescencecb${item.id}`}> <p className="font-semibold text-sm">{item.name}</p> </label>
+                                    </>
+                                )
+                            }
                         </div>
                     </div>
                     <>

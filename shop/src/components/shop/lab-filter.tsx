@@ -12,6 +12,24 @@ const labFilterItems = [
         checked: false
     },
     {
+        id: "11",
+        name: "IGI",
+        slug: "IGI",
+        checked: false
+    },
+    {
+        id: "5",
+        name: "HRD",
+        slug: "HRD",
+        checked: false
+    },
+    {
+        id: "8",
+        name: "CGL",
+        slug: "CGL",
+        checked: false
+    },
+    {
         id: "2",
         name: "AGS",
         slug: "AGS",
@@ -30,12 +48,6 @@ const labFilterItems = [
         checked: false
     },
     {
-        id: "5",
-        name: "HRD",
-        slug: "HRD",
-        checked: false
-    },
-    {
         id: "6",
         name: "NGTC",
         slug: "NGTC",
@@ -45,12 +57,6 @@ const labFilterItems = [
         id: "7",
         name: "GIA DOR",
         slug: "GIA DOR",
-        checked: false
-    },
-    {
-        id: "8",
-        name: "CGL",
-        slug: "CGL",
         checked: false
     },
     {
@@ -65,12 +71,7 @@ const labFilterItems = [
         slug: "GSI",
         checked: false
     },
-    {
-        id: "11",
-        name: "IGI",
-        slug: "IGI",
-        checked: false
-    },
+    
 ];
 
 function Arrow(props: {
