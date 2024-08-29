@@ -30,6 +30,12 @@ const labFilterItems = [
         checked: false
     },
     {
+        id: "12",
+        name: "IDT",
+        slug: "IDT",
+        checked: false
+    },
+    {
         id: "2",
         name: "AGS",
         slug: "AGS",
