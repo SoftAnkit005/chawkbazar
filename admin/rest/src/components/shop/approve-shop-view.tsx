@@ -16,11 +16,13 @@ type FormValues = {
   customer_type: number;
   admin_commission_rate: number;
   admin_commission_rate_solitaire: number;
+  admin_commission_rate_solitaire_natural: number;
   markup_type: string;
   making_charges_markup: number;
   wastage_markup: number;
   admin_commission_rate_customer: number;
   admin_commission_rate_solitaire_customer: number;
+  admin_commission_rate_solitaire_customer_natural: number;
   markup_type_customer: string;
   making_charges_markup_customer: number;
   wastage_markup_customer: number;
@@ -50,10 +52,12 @@ const ApproveShopView = () => {
     customer_type,
     admin_commission_rate,
     admin_commission_rate_solitaire,
+    admin_commission_rate_solitaire_natural,
     making_charges_markup,
     wastage_markup,
     admin_commission_rate_customer,
     admin_commission_rate_solitaire_customer,
+    admin_commission_rate_solitaire_customer_natural,
     markup_type,
     markup_type_customer,
     making_charges_markup_customer,
@@ -70,12 +74,18 @@ const ApproveShopView = () => {
           admin_commission_rate_solitaire: Number(
             admin_commission_rate_solitaire
           ),
+          admin_commission_rate_solitaire_natural: Number(
+            admin_commission_rate_solitaire_natural
+          ),
           markup_type: markup_type || "p",
           making_charges_markup: Number(making_charges_markup),
           wastage_markup: Number(wastage_markup),
           admin_commission_rate_customer: Number(admin_commission_rate_customer),
           admin_commission_rate_solitaire_customer: Number(
             admin_commission_rate_solitaire_customer
+          ),
+          admin_commission_rate_solitaire_customer_natural: Number(
+            admin_commission_rate_solitaire_customer_natural
           ),
           markup_type_customer: markup_type_customer || "p",
           making_charges_markup_customer: Number(making_charges_markup_customer),
@@ -139,7 +149,7 @@ const ApproveShopView = () => {
           />
 
           <Input
-            label={`Commission rate on Solitaire %`}
+            label={`Commission rate on Solitaire % (Labgrown)`}
             {...register("admin_commission_rate_solitaire", {
               required: "You must need to set your commission rate",
             })}
@@ -147,6 +157,18 @@ const ApproveShopView = () => {
             variant="outline"
             className="mb-4"
             error={t(errors.admin_commission_rate_solitaire?.message!)}
+          />
+          <Input
+            label={`Commission rate on Solitaire % (Natural)`}
+            {...register("admin_commission_rate_solitaire_natural", {
+              required: "You must need to set your commission rate",
+            })}
+            defaultValue={
+              Number(balance?.admin_commission_rate_solitaire_natural) || 0
+            }
+            variant="outline"
+            className="mb-4"
+            error={t(errors.admin_commission_rate_solitaire_natural?.message!)}
           />
           <Label>{"Mark Up Type"}</Label>
           <select
@@ -202,7 +224,7 @@ const ApproveShopView = () => {
           />
 
           <Input
-            label={`Commission rate on Solitaire for customer %`}
+            label={`Commission rate on Solitaire for customer % (Labgrown)`}
             {...register("admin_commission_rate_solitaire_customer", {
               required: "You must need to set your commission rate",
             })}
@@ -210,6 +232,22 @@ const ApproveShopView = () => {
             variant="outline"
             className="mb-4"
             error={t(errors.admin_commission_rate_solitaire_customer?.message!)}
+          />
+          <Input
+            label={`Commission rate on Solitaire for customer % (Natural)`}
+            {...register("admin_commission_rate_solitaire_customer_natural", {
+              required: "You must need to set your commission rate",
+            })}
+            defaultValue={
+              Number(
+                balance?.admin_commission_rate_solitaire_customer_natural
+              ) || 0
+            }
+            variant="outline"
+            className="mb-4"
+            error={t(
+              errors.admin_commission_rate_solitaire_customer_natural?.message!
+            )}
           />
           <Label>{"Mark Up Type  for customer"}</Label>
           <select

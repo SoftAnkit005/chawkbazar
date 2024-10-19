@@ -317,42 +317,116 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
       width: 90,
       ellipsis: true,
       render: (discount: number, record: any) => {
+        console.log("record======<>", record);
         // Assuming customer_type is accessible from the record
         // const customer_type = record.customer_type;
 
         // Conditionally render discount or customer_discount based on customer_type
         // const displayDiscount = customer_type === 1;
 
-        console.log("discount", discount)
-        console.log("customer_type", customer_type)
+        // return (
+        //   <span className="whitespace-nowrap truncate">
+        //     {customer_type == null ? "adssa" : customer_type}
+        //   </span>
+        // );
+
+        // return (
+        //   <span className="whitespace-nowrap truncate">
+        //     -
+        //     {customer_type
+        //       ? discount == null
+        //         ? "0 %"
+        //         : Math.abs(discount).toFixed(2) + " %"
+        //       : record.customer_discount == null
+        //       ? "0 %"
+        //       : Math.abs(record.customer_discount).toFixed(2) + " %"}
+        //   </span>
+        // );
+        // Assuming customer_type is accessible from the record
+        // const customer_type = record.customer_type;
+
+        // Conditionally render discount or customer_discount based on customer_type
+        // const displayDiscount = customer_type === 1;
+
+        console.log("discount", discount);
+        console.log("customer_type", customer_type);
         // console.log("record ", record?.shop?.balance)
 
         // const final_discount = customer_type ?
         //   (discount == null ? 0 : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire || 0.0)).toFixed(2))
         //   : (discount == null ? 0 : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0)).toFixed(2));
+        let final_discount = 0;
+        const adminCommissionRate = customer_type
+          ? (record.type_name === "LABGROWN"
+            ? record?.shop?.balance?.admin_commission_rate_solitaire
+            : record?.shop?.balance
+              ?.admin_commission_rate_solitaire_natural) || 0.0
+          : (record.type_name === "LABGROWN"
+            ? record?.shop?.balance?.admin_commission_rate_solitaire_customer
+            : record?.shop?.balance
+              ?.admin_commission_rate_solitaire_customer_natural) || 0.0;
 
-        const final_discount = Number(discount == null ?
-          0 :
-          Math.abs(discount - Number(customer_type ?
-            (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
-            (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
 
+        console.log("admin_commission_rate_solitaire_customer_natural", record?.shop?.balance
+          ?.admin_commission_rate_solitaire_customer_natural);
+        console.log("admin_commission_rate_solitaire_customer", record?.shop?.balance?.admin_commission_rate_solitaire_customer);
+
+        final_discount = Number(
+          discount == null
+            ? 0
+            : Math.abs(discount - Number(adminCommissionRate))
+        );
         console.log("final_discount", final_discount);
 
-
         return (
-          <span className="whitespace-nowrap truncate">-
+          <span className="whitespace-nowrap truncate">
+            -
             {/* {customer_type ?
               (discount == null ? "0 %" : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire || 0.0)).toFixed(2) + " %")
               : (discount == null ? "0 %" : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0)).toFixed(2) + " %")
               //  (record.customer_discount == null ? "0 %" : Math.abs(record.customer_discount).toFixed(2) + " %")
             } */}
-            {
-              (final_discount || 0.0).toFixed(2) + " %"
-            }
+            {(final_discount || 0.0).toFixed(2) + " %"}
           </span>
         );
       },
+      // render: (discount: number, record: any) => {
+      //   // Assuming customer_type is accessible from the record
+      //   // const customer_type = record.customer_type;
+
+      //   // Conditionally render discount or customer_discount based on customer_type
+      //   // const displayDiscount = customer_type === 1;
+
+      //   console.log("discount", discount)
+      //   console.log("customer_type", customer_type)
+      //   // console.log("record ", record?.shop?.balance)
+
+      //   // const final_discount = customer_type ?
+      //   //   (discount == null ? 0 : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire || 0.0)).toFixed(2))
+      //   //   : (discount == null ? 0 : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0)).toFixed(2));
+
+      //   const final_discount = Number(discount == null ?
+      //     0 :
+      //     Math.abs(discount - Number(customer_type ?
+      //       (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
+      //       (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
+
+      //   console.log("final_discount", final_discount);
+
+
+      //   return (
+      //     <span className="whitespace-nowrap truncate">-
+      //       {/* {customer_type ?
+      //         (discount == null ? "0 %" : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire || 0.0)).toFixed(2) + " %")
+      //         : (discount == null ? "0 %" : Math.abs(discount - Number(record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0)).toFixed(2) + " %")
+      //         //  (record.customer_discount == null ? "0 %" : Math.abs(record.customer_discount).toFixed(2) + " %")
+      //       } */}
+      //       {
+      //         (final_discount || 0.0).toFixed(2) + " %"
+      //       }
+      //     </span>
+      //   );
+      // },
     },
     {
       title: "RATE/CT",

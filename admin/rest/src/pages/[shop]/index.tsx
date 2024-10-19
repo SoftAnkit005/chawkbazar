@@ -263,10 +263,26 @@ export default function ShopPage() {
                     {`${balance?.admin_commission_rate_solitaire ?? 0} %` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    Commission on  Solitaire B2B
+                    Commission on  Solitaire (Labgrown) B2B
                   </p>
                 </div>
                 </div>
+              <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                  <PercentageIcon width={16} />
+                </div>
+
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${
+                      balance?.admin_commission_rate_solitaire_natural ?? 0
+                    } %` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    Commission on Solitaire(Natural) B2B
+                  </p>
+                </div>
+              </div>
               <div className="flex items-center py-3 px-4 border-b border-gray-100">
                 <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
                   {
@@ -336,10 +352,24 @@ export default function ShopPage() {
                     {`${balance?.admin_commission_rate_solitaire_customer ?? 0} %` ?? "Not Set"}
                   </p>
                   <p className="text-sm text-muted mt-0">
-                    Commission on Solitaire B2C
+                    Commission on Solitaire(Labgrown) B2C
                   </p>
                 </div>
                 </div>
+                <div className="flex items-center py-3 px-4 border-b border-gray-100">
+                <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
+                  <PercentageIcon width={16} />
+                </div>
+
+                <div className="ml-3">
+                  <p className="text-lg font-semibold text-sub-heading mb-0.5">
+                    {`${ balance?.admin_commission_rate_solitaire_customer_natural ?? 0 } %` ?? "Not Set"}
+                  </p>
+                  <p className="text-sm text-muted mt-0">
+                    Commission on Solitaire(Natural) B2C
+                  </p>
+                </div>
+              </div>
               <div className="flex items-center py-3 px-4 border-b border-gray-100">
                 <div className="p-3 rounded-full w-11 h-11 flex items-center justify-center bg-[#D59066] text-light">
                   {
