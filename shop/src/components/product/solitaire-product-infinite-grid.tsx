@@ -495,7 +495,7 @@ console.log("final_discount===========>: ", final_discount);
 
         return (
           // <span className="whitespace-nowrap truncate">{"$" + (rate_per_unit == null ? "" : Number(((!customer_type || customer_type == 1) ? record.rate_per_unit_customer : rate_per_unit)).toFixed(0))}</span>
-          <span className="whitespace-nowrap truncate">{"₹" + (final_rate_per_unit).toFixed(0)}</span>
+          <span className="whitespace-nowrap truncate">{"$" + (final_rate_per_unit).toFixed(0)}</span>
         );
       },
 
@@ -553,7 +553,7 @@ console.log("final_discount===========>: ", final_discount);
 
         return (
           <span className="whitespace-nowrap" title={final_total.toFixed(0)}>
-            {"₹" + final_total.toFixed(0)}
+            {"$" + final_total.toFixed(0)}
           </span>
         );
       }
