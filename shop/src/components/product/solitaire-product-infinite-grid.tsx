@@ -67,12 +67,29 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
 
     if (productObj) {
 
+    const adminCommissionRate = customer_type
+      ? (productObj.type_name === "LABGROWN"
+          ? productObj?.shop?.balance?.admin_commission_rate_solitaire
+          : productObj?.shop?.balance
+              ?.admin_commission_rate_solitaire_natural) || 0.0
+      : (productObj.type_name === "LABGROWN"
+          ? productObj?.shop?.balance?.admin_commission_rate_solitaire_customer
+          : productObj?.shop?.balance
+              ?.admin_commission_rate_solitaire_customer_natural) || 0.0;
 
-      const final_discount = Number(productObj?.discount == null ?
-        0 :
-        Math.abs(productObj?.discount - Number(customer_type ?
-          (productObj?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
-          (productObj?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
+     
+      
+
+      const final_discount = Number(
+        productObj.discount == null
+          ? 0
+          : Math.abs(productObj.discount - Number(adminCommissionRate))
+      );
+      // const final_discount = Number(productObj?.discount == null ?
+      //   0 :
+      //   Math.abs(productObj?.discount - Number(customer_type ?
+      //     (productObj?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
+      //     (productObj?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
 
 
 
@@ -436,64 +453,52 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
       align: alignLeft,
       width: 80,
       ellipsis: true,
-
-      // Ankit Donda Old Code
-      // render: (rate_per_unit: number, record: any) => {
-
-      //   // console.log("record: ", record);
-
-
-      //   const final_discount = Number(record?.discount == null ?
-      //     0 :
-      //     Math.abs(record?.discount - Number(customer_type ?
-      //       (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
-      //       (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
-
-
-      //   const rap_rate = Number(record?.rap_rate || 0.0)
-
-      //   const final_rate_per_unit = rap_rate * (1 - (final_discount / 100));
-
-      //   // console.log("final_rate_per_unit: ", final_rate_per_unit);
-
-      //   return (
-      //     // <span className="whitespace-nowrap truncate">{"$" + (rate_per_unit == null ? "" : Number(((!customer_type || customer_type == 1) ? record.rate_per_unit_customer : rate_per_unit)).toFixed(0))}</span>
-      //     <span className="whitespace-nowrap truncate">{"₹" + (final_rate_per_unit).toFixed(0)}</span>
-      //   );
-      // },
-
-
-      //Rajan Sutariya New Code For Natural and LabGrown
       render: (rate_per_unit: number, record: any) => {
-        let final_discount = 0;
+
+        // console.log("record: ", record);
         const adminCommissionRate = customer_type
           ? (record.type_name === "LABGROWN"
-            ? record?.shop?.balance?.admin_commission_rate_solitaire
-            : record?.shop?.balance
-              ?.admin_commission_rate_solitaire_natural) || 0.0
+              ? record?.shop?.balance?.admin_commission_rate_solitaire
+              : record?.shop?.balance?.admin_commission_rate_solitaire_natural) || 0.0
           : (record.type_name === "LABGROWN"
-            ? record?.shop?.balance?.admin_commission_rate_solitaire_customer
-            : record?.shop?.balance
-              ?.admin_commission_rate_solitaire_customer_natural) || 0.0;
-        final_discount = Number(
+              ? record?.shop?.balance?.admin_commission_rate_solitaire_customer
+              : record?.shop?.balance
+                  ?.admin_commission_rate_solitaire_customer_natural) || 0.0;
+
+        console.log(
+          "admin_commission_rate_solitaire_customer_natural",
+          record?.shop?.balance?.admin_commission_rate_solitaire_customer_natural
+        );
+        console.log(
+          "admin_commission_rate_solitaire_customer",
+          record?.shop?.balance?.admin_commission_rate_solitaire_customer
+        );
+
+        const final_discount = Number(
           record.discount == null
             ? 0
             : Math.abs(record.discount - Number(adminCommissionRate))
         );
 
+        // const final_discount = Number(record?.discount == null ?
+        //   0 :
+        //   Math.abs(record?.discount - Number(customer_type ?
+        //     (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
+        //     (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
 
-        const rate_per_unit_data = record.rap_rate - (record.rap_rate * final_discount) / 100;;
 
+        const rap_rate = Number(record?.rap_rate || 0.0)
+console.log("final_discount===========>: ", final_discount);
+        const final_rate_per_unit = rap_rate * (1 - (final_discount / 100));
+
+        console.log("final_rate_per_unit: ", final_rate_per_unit);
 
         return (
-          <span className="whitespace-nowrap truncate">
-            {"$" +
-              (rate_per_unit == null
-                ? "0.00"
-                : Math.abs(rate_per_unit_data).toFixed(2))}
-          </span>
+          // <span className="whitespace-nowrap truncate">{"$" + (rate_per_unit == null ? "" : Number(((!customer_type || customer_type == 1) ? record.rate_per_unit_customer : rate_per_unit)).toFixed(0))}</span>
+          <span className="whitespace-nowrap truncate">{"₹" + (final_rate_per_unit).toFixed(0)}</span>
         );
       },
+
     },
     {
       title: "AMOUNT",
@@ -503,33 +508,13 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
       align: alignRight,
       width: 90,
       //			onHeaderCell: () => onHeaderClick("price"),
-      // Ankit Donda Code
-      // render: (value: number, record: any) => {
-
-      //   const final_discount = Number(record?.discount == null ?
-      //     0 :
-      //     Math.abs(record?.discount - Number(customer_type ?
-      //       (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
-      //       (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
-
-
-      //   const rap_rate = Number(record?.rap_rate || 0.0)
-
-      //   const final_rate_per_unit = rap_rate * (1 - (final_discount / 100));
-
-      //   const final_total = final_rate_per_unit * record?.size;
-
-      //   console.log("final_total: ", final_total);
-
-
-      //   return (
-      //     <span className="whitespace-nowrap" title={final_total.toFixed(0)}>
-      //       {"₹" + final_total.toFixed(0)}
-      //     </span>
-      //   );
-      // }
       render: (value: number, record: any) => {
-        let final_discount = 0;
+
+        // const final_discount = Number(record?.discount == null ?
+        //   0 :
+        //   Math.abs(record?.discount - Number(customer_type ?
+        //     (record?.shop?.balance?.admin_commission_rate_solitaire || 0.0) :
+        //     (record?.shop?.balance?.admin_commission_rate_solitaire_customer || 0.0))));
         const adminCommissionRate = customer_type
           ? (record.type_name === "LABGROWN"
               ? record?.shop?.balance?.admin_commission_rate_solitaire
@@ -539,23 +524,39 @@ export const SolitaireProductInfiniteGrid: FC<SolitaireProductGridProps> = ({
               ? record?.shop?.balance?.admin_commission_rate_solitaire_customer
               : record?.shop?.balance
                   ?.admin_commission_rate_solitaire_customer_natural) || 0.0;
-        final_discount = Number(
+
+        console.log(
+          "admin_commission_rate_solitaire_customer_natural",
+          record?.shop?.balance
+            ?.admin_commission_rate_solitaire_customer_natural
+        );
+        console.log(
+          "admin_commission_rate_solitaire_customer",
+          record?.shop?.balance?.admin_commission_rate_solitaire_customer
+        );
+
+        const final_discount = Number(
           record.discount == null
             ? 0
             : Math.abs(record.discount - Number(adminCommissionRate))
         );
 
-        const rate_per_unit_data =  record.rap_rate - (record.rap_rate * final_discount) / 100;
-        console.log("rate_per_unit_data rate per unit", rate_per_unit_data);
-        console.log("size rate per unit", record.size);
-        const amount = rate_per_unit_data * record.size;
-        console.log("amount rate per unit", amount);
+
+        const rap_rate = Number(record?.rap_rate || 0.0)
+
+        const final_rate_per_unit = rap_rate * (1 - (final_discount / 100));
+
+        const final_total = final_rate_per_unit * record?.size;
+
+        console.log("final_total: ", final_total);
+
+
         return (
-          <span className="whitespace-nowrap" title={amount.toFixed(0)}>
-            {"$" + amount.toFixed(0)}
+          <span className="whitespace-nowrap" title={final_total.toFixed(0)}>
+            {"₹" + final_total.toFixed(0)}
           </span>
         );
-      },
+      }
     },
   ];
 
