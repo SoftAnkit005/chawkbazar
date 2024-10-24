@@ -80,7 +80,9 @@ const ApproveShopView = () => {
           markup_type: markup_type || "p",
           making_charges_markup: Number(making_charges_markup),
           wastage_markup: Number(wastage_markup),
-          admin_commission_rate_customer: Number(admin_commission_rate_customer),
+          admin_commission_rate_customer: Number(
+            admin_commission_rate_customer
+          ),
           admin_commission_rate_solitaire_customer: Number(
             admin_commission_rate_solitaire_customer
           ),
@@ -88,7 +90,9 @@ const ApproveShopView = () => {
             admin_commission_rate_solitaire_customer_natural
           ),
           markup_type_customer: markup_type_customer || "p",
-          making_charges_markup_customer: Number(making_charges_markup_customer),
+          making_charges_markup_customer: Number(
+            making_charges_markup_customer
+          ),
           wastage_markup_customer: Number(wastage_markup_customer),
         },
       },
@@ -113,8 +117,9 @@ const ApproveShopView = () => {
             className="mb-4 mr-2"
             error={t(errors.vendor_code?.message!)}
           />
-          <Label>{"Vendor Type"}</Label>
-          <select
+          {/* <Label>{"Vendor Type"}</Label> */}
+          <Input type="hidden" value={2} name="customer_type" />
+          {/* <select
             style={{
               fontSize: "0.875rem",
               color: "#6B7280",
@@ -136,9 +141,9 @@ const ApproveShopView = () => {
                 <option value={x.id}>{x.name}</option>
               ))}
             )
-          </select>
+          </select> */}
           <Input
-            label={`${t("form:input-label-admin-commission-rate")} %`}
+            label={`${t("form:input-label-admin-commission-rate")}% (B2B)`}
             {...register("admin_commission_rate", {
               required: "You must need to set your commission rate",
             })}
@@ -149,7 +154,7 @@ const ApproveShopView = () => {
           />
 
           <Input
-            label={`Commission rate on Solitaire % (Labgrown)`}
+            label={`Commission rate on Solitaire %(B2B Labgrown)`}
             {...register("admin_commission_rate_solitaire", {
               required: "You must need to set your commission rate",
             })}
@@ -158,8 +163,9 @@ const ApproveShopView = () => {
             className="mb-4"
             error={t(errors.admin_commission_rate_solitaire?.message!)}
           />
+
           <Input
-            label={`Commission rate on Solitaire % (Natural)`}
+            label={`Commission rate on Solitaire %(B2B Natural)`}
             {...register("admin_commission_rate_solitaire_natural", {
               required: "You must need to set your commission rate",
             })}
@@ -170,7 +176,7 @@ const ApproveShopView = () => {
             className="mb-4"
             error={t(errors.admin_commission_rate_solitaire_natural?.message!)}
           />
-          <Label>{"Mark Up Type"}</Label>
+          <Label>{"Mark Up Type (B2B)"}</Label>
           <select
             style={{
               fontSize: "0.875rem",
@@ -194,7 +200,7 @@ const ApproveShopView = () => {
               {...register("making_charges_markup", {
                 required: "You must need to set your markup rate",
               })}
-              label={"Making Charges MarkUp"}
+              label={"Making Charges MarkUp (B2B)"}
               defaultValue={Number(balance?.making_charges_markup) || 0}
               variant="outline"
               className="mb-4 mr-2"
@@ -205,7 +211,7 @@ const ApproveShopView = () => {
                 required: "You must need to set your wastage rate",
               })}
               defaultValue={Number(balance?.wastage_markup) || 0}
-              label={"Wastage MarkUp"}
+              label={"Wastage MarkUp(B2B)"}
               variant="outline"
               className="mb-4 ml-2"
               error={t(errors.wastage_markup?.message!)}
@@ -213,7 +219,7 @@ const ApproveShopView = () => {
           </div>
 
           <Input
-            label={`Commission rate on Diamond/Stone for customer %`} 
+            label={`Commission rate on Diamond/Stone for customer %`}
             {...register("admin_commission_rate_customer", {
               required: "You must need to set your commission rate",
             })}
@@ -228,11 +234,14 @@ const ApproveShopView = () => {
             {...register("admin_commission_rate_solitaire_customer", {
               required: "You must need to set your commission rate",
             })}
-            defaultValue={Number(balance?.admin_commission_rate_solitaire_customer) || 0}
+            defaultValue={
+              Number(balance?.admin_commission_rate_solitaire_customer) || 0
+            }
             variant="outline"
             className="mb-4"
             error={t(errors.admin_commission_rate_solitaire_customer?.message!)}
           />
+
           <Input
             label={`Commission rate on Solitaire for customer % (Natural)`}
             {...register("admin_commission_rate_solitaire_customer_natural", {
@@ -274,7 +283,9 @@ const ApproveShopView = () => {
                 required: "You must need to set your markup rate",
               })}
               label={"Making Charges MarkUp for customer"}
-              defaultValue={Number(balance?.making_charges_marku_customerp) || 0}
+              defaultValue={
+                Number(balance?.making_charges_marku_customerp) || 0
+              }
               variant="outline"
               className="mb-4 mr-2"
               error={t(errors.making_charges_markup_customer?.message!)}
