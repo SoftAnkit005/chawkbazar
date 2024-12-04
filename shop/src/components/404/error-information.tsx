@@ -9,12 +9,7 @@ const ErrorInformation: React.FC = () => {
 	return (
 		<div className="border-t border-b border-gray-300 text-center px-16 py-16 sm:py-20 lg:py-24 xl:py-32 flex items-center justify-center">
 			<div>
-				<Image
-					src="https://zweler.com/admin/assets/images/404.svg"
-					alt={t("error-heading")}
-					width={822}
-					height={492}
-				/>
+				<Image src="https://zweler.com/admin/assets/images/404.svg" alt={t("error-heading")} width={822} height={492} />
 
 				<Text variant="mediumHeading">{t("error-heading")}</Text>
 				<p className="text-sm md:text-base leading-7 pt-2 md:pt-3.5 pb-7 md:pb-9">
